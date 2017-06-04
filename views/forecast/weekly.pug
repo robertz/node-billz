@@ -1,0 +1,15 @@
+extends ../layout
+
+block content
+    div
+        | #{startOfWeek}
+    div
+        | #{endOfWeek}
+
+    div
+        for week in weeks
+            div 
+                | #{week.start} - #{week.end}
+                for payee in week.payees
+                    div #{payee.name} - #{payee.due} - #{payee.amount}
+                hr

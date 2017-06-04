@@ -1,0 +1,26 @@
+extends ../layout
+
+block content
+  .panel.panel-primary
+    .panel-heading
+        h5= data.name
+    .panel-body
+        form.form(method='post', href='/payee/' + data._id)
+            input(type='hidden', name='_csrf', value=_csrf)
+            .row
+                .col-sm-12
+                    label Name:
+                        input(type = 'text', name = 'name', class = 'form-control', value = data.name)
+                .col-sm-12
+                    label Description:
+                        input(type = 'text', name = 'description', class = 'form-control', value = data.description)
+                .col-sm-12
+                    label Due:
+                        input(type = 'text', name = 'due', class = 'form-control', value = data.due)
+                .col-sm-12
+                    label Amount:
+                        input(type = 'text', name = 'amount', class = 'form-control', value = data.amount)
+                .col-sm-12
+                    input(type='submit', class='btn btn-primary', value='Submit')
+                    | &nbsp;&nbsp;
+                    a(class='btn btn-warning', href='/payee') Cancel
