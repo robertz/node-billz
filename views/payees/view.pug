@@ -16,7 +16,7 @@ block content
                         input(type = 'text', name = 'description', class = 'form-control', value = data.description)
                 .col-sm-12
                     label Due:
-                        input(type = 'text', name = 'due', class = 'form-control', value = data.due)
+                        input(type = 'date', name = 'ref', class = 'form-control', value = moment(data.ref).format('YYYY-MM-DD'))
                 .col-sm-12
                     label Amount:
                         input(type = 'text', name = 'amount', class = 'form-control', value = data.amount)

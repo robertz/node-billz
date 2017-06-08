@@ -1,5 +1,6 @@
 const Payee = require('../models/Payee');
 const formatCurrency = require('format-currency');
+const moment = require('moment');
 const AnalyticService = require('../services/analyticService');
 
 /**
@@ -33,7 +34,7 @@ exports.getIndex = (req, res) => {
 exports.getView = (req, res) => {
     if(req.params.id){
         Payee
-            .findOne({_id: req.params.id, owner: req.user._id}, function (err, payee) {
+            .findOne({_id: req.params.id, owner: req.user._id}, (err, payee) => {
                 res.render('payees/view', {
                     title: 'Edit Payee',
                     data: payee 
@@ -50,7 +51,7 @@ exports.getView = (req, res) => {
  */
 exports.getCreate = (req, res) => {
     Payee
-        .findOne({_id: req.params.id, owner: req.user._id}, function (err, payee) {
+        .findOne({_id: req.params.id, owner: req.user._id}, (err, payee) => {
 
             if (err) {return next(err);}
             
@@ -72,7 +73,7 @@ exports.postCreate = (req, res) => {
 
     payee.name = req.body.name || '';
     payee.description = req.body.description || '';
-    payee.due = req.body.due || '';
+    payee.ref = req.body.ref || '';
     payee.amount = req.body.amount || '';
     
     payee.owner = req.user._id;
@@ -115,7 +116,7 @@ exports.postSave = (req, res) => {
 
             payee.name = req.body.name || '';
             payee.description = req.body.description || '';
-            payee.due = req.body.due || '';
+            payee.ref = req.body.ref || '';
             payee.amount = req.body.amount || '';
             payee.save((err) => {
                 if (err) {return next(err);}

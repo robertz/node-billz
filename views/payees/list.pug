@@ -29,5 +29,5 @@ block content
                     td
                         a(href="/payee/" + payee._id) #{payee.name}
                     td(class='hidden-xs') #{payee.description}
-                    td #{payee.due}
+                    td #{moment(payee.ref).format('Do')}
                     td $#{formatCurrency(payee.amount)}
