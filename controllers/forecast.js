@@ -34,8 +34,12 @@ exports.getIndex = (req, res) => {
                     eventDate.add(1, 'month');
                 }
                 console.dir(startOfWeek);
-                console.log(`Payee: ${payees[i].name} Valid: ${eventDate.isBetween(startOfWeek, endOfWeek)}`)
-                if (eventDate.isBetween(startOfWeek, endOfWeek)) {
+                console.log(`Payee: ${payees[i].name} Valid: ${eventDate.isBetween(startOfWeek, endOfWeek)}`);
+
+                // One day before start
+                let t = new Moment(startOfWeek).subtract(1, 'day');
+
+                if (eventDate.isBetween(t, endOfWeek)) {
                     weeklyTemplate.payees.push(payees[i]);
                 }
             }
