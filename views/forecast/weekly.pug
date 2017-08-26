@@ -2,14 +2,10 @@ extends ../layout
 
 block content
     div
-        | #{startOfWeek}
-    div
-        | #{endOfWeek}
-
-    div
         for week in weeks
-            div 
-                | #{week.start} - #{week.end}
-                for payee in week.payees
-                    div #{payee.name} - #{moment(payee.ref).format('Do')} - #{payee.amount}
-                hr
+            .panel.panel-primary
+                .panel-heading
+                    | #{week.start} - #{week.end}
+                .panel-body
+                    for payee in week.payees
+                        div #{payee.name} - #{moment(payee.ref).format('Do')} - #{payee.amount}

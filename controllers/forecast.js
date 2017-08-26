@@ -21,8 +21,8 @@ exports.getIndex = (req, res) => {
             let weekly = [];
 
             let weeklyTemplate = {
-                start: startOfWeek.format('dddd MMMM Do YYYY, h:mm:ss a'),
-                end: endOfWeek.format('dddd MMMM Do YYYY, h:mm:ss a'),
+                start: startOfWeek.format('dddd, MMMM Do YYYY'),
+                end: endOfWeek.format('dddd, MMMM Do YYYY'),
                 payees: []
             };
 
@@ -33,9 +33,6 @@ exports.getIndex = (req, res) => {
                 if(eventDate.isBefore(startOfWeek)){
                     eventDate.add(1, 'month');
                 }
-                console.dir(startOfWeek);
-                console.log(`Payee: ${payees[i].name} Valid: ${eventDate.isBetween(startOfWeek, endOfWeek)}`);
-
                 // One day before start
                 let t = new Moment(startOfWeek).subtract(1, 'day');
 
@@ -48,8 +45,8 @@ exports.getIndex = (req, res) => {
 
             res.render('forecast/weekly', {
                 title: 'Forecast',
-                startOfWeek: startOfWeek.format('dddd MMMM Do YYYY, h:mm:ss a'),
-                endOfWeek: endOfWeek.format('dddd MMMM Do YYYY, h:mm:ss a'),
+                startOfWeek: startOfWeek.format('dddd MMMM Do YYYY'),
+                endOfWeek: endOfWeek.format('dddd MMMM Do YYYY'),
                 weeks: weekly
             });
 
