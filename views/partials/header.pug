@@ -22,6 +22,8 @@
         else
           li(class=(title == 'Payees') ? 'active' : undefined)
             a(href='/payee') Payees
+          li(class=(title == 'Forecast') ? 'active' : undefined)
+            a(href='/forecast') Forecast
           li.dropdown(class=(title == 'Account Management') ? 'active' : undefined)
             a.dropdown-toggle(href='#', data-toggle='dropdown')
               if user.profile.picture

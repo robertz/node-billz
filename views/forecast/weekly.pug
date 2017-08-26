@@ -11,5 +11,5 @@ block content
             div 
                 | #{week.start} - #{week.end}
                 for payee in week.payees
-                    div #{payee.name} - #{payee.due} - #{payee.amount}
+                    div #{payee.name} - #{moment(payee.ref).format('Do')} - #{payee.amount}
                 hr

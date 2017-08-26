@@ -5,7 +5,7 @@ const payeeSchema = new mongoose.Schema({
     intervalType: String,
     name: String,
     description: String,
-    ref: Date,
+    ref: String,
     amount: { type: Number, min: 0, max: 99999 },
     url: String,
     active: { type: Boolean, default: true },

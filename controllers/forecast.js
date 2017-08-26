@@ -5,51 +5,48 @@ const AnalyticService = require('../services/analyticService');
 const Moment = require('moment');
 
 exports.getIndex = (req, res) => {
-    var now = new Moment();
-
     Payee
-        .find({ owner: req.user._id }, null, { sort: { due: 1 } }, (err, payees) => {
+        .find({ owner: req.user.id }, null, { }, (err, payees) => {
 
             if (err) { return next(err); }
+            let ref = new Moment();
+            let startOfWeek = new Moment().startOf('week').subtract(7 - 5, 'days');
 
-            let startOfWeek = new Moment().startOf('week');
-            let endOfWeek = new Moment().endOf('week');
+            if(ref.diff(startOfWeek, 'days') >= 7) {
+                startOfWeek.add(7, 'days');
+            }
+
+            let endOfWeek = new Moment(startOfWeek).add(6, 'days');
             
             let weekly = [];
 
-            for (payee in payees) {
-                let endOfMonth = new Moment().endOf('month').format('D');
-                let correct = payee.due > endOfMonth ? endOfMonth : payee.due;
-                let eventDate = new Moment()
-                    .set({
-                        'year': correct < startOfWeek.format('D') ? endOfWeek.format('YYYY') : startOfWeek.format('YYYY'),
-                        'month': correct < startOfWeek.format('D') ? endOfWeek.format('M') : startOfWeek.format('M'),
-                        'date': correct
-                    });
+            let weeklyTemplate = {
+                start: startOfWeek.format('dddd MMMM Do YYYY, h:mm:ss a'),
+                end: endOfWeek.format('dddd MMMM Do YYYY, h:mm:ss a'),
+                payees: []
+            };
 
-                console.log(eventDate.format('M/D/YYYY'));
+            for(var i = 0; i < payees.length; i++){
+                let diff = new Moment().diff(payees[i].ref, "months");
+                let eventDate = new Moment(payees[i].ref).add(diff, 'months');
+
+                if(eventDate.isBefore(startOfWeek)){
+                    eventDate.add(1, 'month');
+                }
+                console.dir(startOfWeek);
+                console.log(`Payee: ${payees[i].name} Valid: ${eventDate.isBetween(startOfWeek, endOfWeek)}`)
+                if (eventDate.isBetween(startOfWeek, endOfWeek)) {
+                    weeklyTemplate.payees.push(payees[i]);
+                }
             }
 
-            // for (let i = 0; i < 4; i++) {
-
-            //     let p = payees.filter((elem, index, arr) => elem.due > startOfWeek.format('D') && elem.due < endOfWeek.format('D') && elem.active && !elem.deleted);
-
-            //     weekly.push({
-            //         start: startOfWeek.format('dddd MMMM Do YYYY'),
-            //         end: endOfWeek.format('dddd MMMM Do YYYY'),
-            //         payees: p
-            //     });
-
-            //     startOfWeek.add(1, 'week');
-            //     endOfWeek.add(1, 'week');
-            // }
-
+            weekly.push(weeklyTemplate);
 
             res.render('forecast/weekly', {
                 title: 'Forecast',
                 startOfWeek: startOfWeek.format('dddd MMMM Do YYYY, h:mm:ss a'),
                 endOfWeek: endOfWeek.format('dddd MMMM Do YYYY, h:mm:ss a'),
-                weeks: []
+                weeks: weekly
             });
 
         });
