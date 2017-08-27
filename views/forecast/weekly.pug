@@ -17,14 +17,11 @@ block content
                 table.table.table-striped
                     thead
                         tr
+                            th(width='20%') Date
                             th Name
-                            th Description
-                            th Due
-                            th Amount
+                            th(width='20%') Amount
                     for payee in week.payees
                         tr
-                            td
-                                a(href="/payee/" + payee._id) #{payee.name}
-                            td(class='hidden-xs') #{payee.description}
-                            td #{moment(payee.ref).format('Do')}
+                            td #{moment(payee.ref).format('dddd, M/D/YYYY')}
+                            td #{payee.name}
                             td $#{formatCurrency(payee.amount)}
