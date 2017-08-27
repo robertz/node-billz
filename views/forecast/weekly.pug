@@ -22,6 +22,6 @@ block content
                             th(width='20%') Amount
                     for payee in week.payees
                         tr
-                            td #{moment(payee.ref).format('dddd, M/D/YYYY')}
+                            td #{moment(payee.date).format('dddd, M/D/YYYY')}
                             td #{payee.name}
                             td $#{formatCurrency(payee.amount)}

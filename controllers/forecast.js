@@ -34,16 +34,20 @@ exports.getIndex = (req, res) => {
                 for (let i = 0; i < payees.length; i++) {
                     let diff = new Moment().diff(payees[i].ref, "months");
                     let eventDate = new Moment(payees[i].ref).add(diff, 'months');
-
                     if (eventDate.isBefore(startOfWeek)) {
                         eventDate.add(1, 'month');
                     }
-                    // One day before start
+
+                    // ts and te is one day before and one day after so dates fall in between
                     let ts = new Moment(startOfWeek).subtract(1, 'day');
                     let te = new Moment(endOfWeek).add(1, 'day');
-
                     if (eventDate.isBetween(ts, te)) {
-                        weeklyTemplate.payees.push(payees[i]);
+                        let payeeData = {
+                            date: eventDate,
+                            name: payees[i].name,
+                            amount: payees[i].amount
+                        };
+                        weeklyTemplate.payees.push(payeeData);
                         weeklyTemplate.amountDue += payees[i].amount;
                         weeklyTemplate.count++;
                     }
@@ -53,8 +57,6 @@ exports.getIndex = (req, res) => {
 
 
             }
-
-            console.dir(weekly);
 
             res.render('forecast/weekly', {
                 title: 'Forecast',
