@@ -15,7 +15,7 @@ exports.getIndex = (req, res) => {
             for(let otr = 0; otr < 4; otr++){
                 if(otr) ref.add(1, 'weeks');
 
-                let startOfWeek = new Moment(ref).startOf('week').subtract(7 - 5, 'days');
+                let startOfWeek = new Moment(ref).startOf('week').subtract(7 - req.user.offset, 'days');
 
                 if (ref.diff(startOfWeek, 'days') >= 7) {
                     startOfWeek.add(7, 'days');
