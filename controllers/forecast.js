@@ -23,6 +23,8 @@ exports.getIndex = (req, res) => {
             let weeklyTemplate = {
                 start: startOfWeek.format('dddd, MMMM Do YYYY'),
                 end: endOfWeek.format('dddd, MMMM Do YYYY'),
+                amountDue: 0,
+                count: 0,
                 payees: []
             };
 
@@ -38,6 +40,8 @@ exports.getIndex = (req, res) => {
 
                 if (eventDate.isBetween(t, endOfWeek)) {
                     weeklyTemplate.payees.push(payees[i]);
+                    weeklyTemplate.amountDue += payees[i].amount;
+                    weeklyTemplate.count++;
                 }
             }
 
