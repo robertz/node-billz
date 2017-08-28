@@ -9,11 +9,9 @@ block content
                 .panel-body
                     .row
                         .col-xs-6.col-sm-4
-                            small(style='font-variant: small-caps;') Count
-                            h4 #{week.count}
-                        .col-xs-6.col-sm-4
                             small(style='font-variant: small-caps;') Amount Due
                             h4 $#{formatCurrency(week.amountDue)}
+                            small #{week.percentMonth.toLocaleString('en-US')}% of month
                 table.table.table-striped
                     thead
                         tr

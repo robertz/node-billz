@@ -10,6 +10,7 @@ exports.getIndex = (req, res) => {
             if (err) { return next(err); }
             let ref = new Moment();
             let weekly = [];
+            let monthlyTotal = payees.reduce((acc, payee) => acc + payee.amount, 0);
 
             for(let otr = 0; otr < 4; otr++){
                 if(otr) ref.add(1, 'weeks');
@@ -31,6 +32,7 @@ exports.getIndex = (req, res) => {
                 };
 
                 for (let i = 0; i < payees.length; i++) {
+
                     let diff = new Moment().diff(payees[i].ref, "months");
                     let eventDate = new Moment(payees[i].ref).add(diff, 'months');
                     if (eventDate.isBefore(startOfWeek)) {
@@ -46,11 +48,13 @@ exports.getIndex = (req, res) => {
                             name: payees[i].name,
                             amount: payees[i].amount
                         };
+
                         weeklyTemplate.payees.push(payeeData);
                         weeklyTemplate.amountDue += payees[i].amount;
                         weeklyTemplate.count++;
                     }
                 }
+                weeklyTemplate['percentMonth'] = (weeklyTemplate.amountDue / monthlyTotal) * 100;
 
                 weekly.push(weeklyTemplate);
 
@@ -59,8 +63,7 @@ exports.getIndex = (req, res) => {
 
             res.render('forecast/weekly', {
                 title: 'Forecast',
-                // startOfWeek: startOfWeek.format('dddd MMMM Do YYYY'),
-                // endOfWeek: endOfWeek.format('dddd MMMM Do YYYY'),
+                monthlyTotal: monthlyTotal,
                 weeks: weekly
             });
 
