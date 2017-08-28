@@ -1,7 +1,6 @@
 const Payee = require('../models/Payee');
 const formatCurrency = require('format-currency');
 const moment = require('moment');
-const AnalyticService = require('../services/analyticService');
 
 /**
  * @function getIndex
