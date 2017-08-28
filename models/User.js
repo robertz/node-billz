@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema({
         website: String,
         picture: String
     },
-    offset: { type: Number, min: 0, max: 6 }
+    offset: { type: Number, min: 0, max: 6, default: 0 }
 }, {
     timestamps: true
 });
