@@ -17,9 +17,10 @@ block content
                         tr
                             th(width='20%') Date
                             th Name
-                            th(width='20%') Amount
+                            th(width='10%') Amount
                     for payee in week.payees
                         tr
                             td #{moment(payee.date).format('dddd, M/D/YYYY')}
                             td #{payee.name}
-                            td $#{formatCurrency(payee.amount)}
+                            td 
+                                a(class='btn btn-warning' style='width: 100%') $#{formatCurrency(payee.amount)}
