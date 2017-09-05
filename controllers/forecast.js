@@ -46,6 +46,7 @@ exports.getIndex = (req, res) => {
                         let payeeData = {
                             date: eventDate,
                             name: payees[i].name,
+                            url: payees[i].url,
                             description: payees[i].description,
                             amount: payees[i].amount
                         };

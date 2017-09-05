@@ -8,8 +8,8 @@ const paymentSchema = new mongoose.Schema({
     active: { type: Boolean, default: true },
     deleted: { type: Boolean, default: false }
 }, {
-        timestamps: true
-    });
+    timestamps: true
+});
 
 const Payment = mongoose.model('Payment', paymentSchema);
 
