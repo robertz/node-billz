@@ -33,7 +33,7 @@ exports.getIndex = (req, res) => {
 
                 for (let i = 0; i < payees.length; i++) {
 
-                    let diff = new Moment().diff(payees[i].ref, "months");
+                    let diff = new Moment().diff(payees[i].ref, 'months');
                     let eventDate = new Moment(payees[i].ref).add(diff, 'months');
                     if (eventDate.isBefore(startOfWeek)) {
                         eventDate.add(1, 'month');

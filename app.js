@@ -22,7 +22,7 @@ const sass = require('node-sass-middleware');
  * Load environment variables from .env file, where API keys and passwords are configured.
  */
 
-dotenv.load({ path: '.env.node-billz' });
+dotenv.load({ path: '.env' });
 
 
 /**
@@ -150,10 +150,6 @@ app.get('/forecast', passportConfig.isAuthenticated, forecastController.getIndex
 /**
  * OAuth authentication routes. (Sign in)
  */
-app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'public_profile'] }));
-app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }), (req, res) => {
-  res.redirect(req.session.returnTo || '/');
-});
 app.get('/auth/google', passport.authenticate('google', { scope: 'profile email' }));
 app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
   res.redirect(req.session.returnTo || '/');
