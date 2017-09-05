@@ -23,9 +23,8 @@ block content
                             td #{moment(payee.date).format('dddd, M/D/YYYY')}
                             td #{payee.name}
                                 if (payee.url)
-                                    | &nbsp;&nbsp;( 
-                                    a(href=payee.url target='_blank') Website 
-                                    | )
+                                    |    
+                                    a(href=payee.url target='_blank') <i class="fa fa-external-link"></i>
                                 br
                                 | #{payee.description}
                             td 

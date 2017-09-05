@@ -3,25 +3,25 @@ extends ../layout
 block content
   .panel.panel-primary
     .panel-heading
-        h5 Create a new Payee
+        h5 Create/Edit Payee
     .panel-body
         form.form(method='post' href='/payee/create')
             input(type='hidden' name='_csrf' value=_csrf)
             .row
                 .col-sm-12
                     label Name:
-                        input(type='text' name='name' class='form-control')
+                        input(type='text' name='name' class='form-control' value=payee.name)
                 .col-sm-12
                     label Payment URL:
-                        input(type='text' name='url' class='form-control')
+                        input(type='text' name='url' class='form-control' value=payee.url)
                 .col-sm-12
                     label Description:
-                        input(type='text' name='description' class='form-control')
+                        input(type='text' name='description' class='form-control' value=payee.description)
                 .col-sm-12
                     label Due:
-                        input(type='date' name='ref' class='form-control')
+                        input(type='date' name='ref' class='form-control' value=payee.ref)
                 .col-sm-12
                     label Amount:
-                        input(type='text' name='amount' class='form-control')
+                        input(type='text' name='amount' class='form-control' value=payee.amount)
                 .col-sm-12
                     input(type='submit' class='btn btn-primary' value='Submit')

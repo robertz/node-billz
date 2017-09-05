@@ -27,7 +27,7 @@ block content
             for payee in payees
                 tr
                     td
-                        a(href="/payee/" + payee._id) #{payee.name}
+                        a(href="/payee/view/" + payee._id) #{payee.name}
                     td(class='hidden-xs') #{payee.description}
                     td #{moment(payee.ref).format('Do')}
                     td $#{formatCurrency(payee.amount)}

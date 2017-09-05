@@ -138,11 +138,14 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
 /**
  * node-billz specific routes
  */
+app.get('/payee', passportConfig.isAuthenticated, payeeController.getIndex);
+
 app.get('/payee/create', passportConfig.isAuthenticated, payeeController.getCreate);
 app.post('/payee/create', passportConfig.isAuthenticated, payeeController.postCreate);
-app.get('/payee', passportConfig.isAuthenticated, payeeController.getIndex);
-app.get('/payee/:id', passportConfig.isAuthenticated, payeeController.getView);
-app.post('/payee/:id', passportConfig.isAuthenticated, payeeController.postSave);
+
+app.get('/payee/view/:id', passportConfig.isAuthenticated, payeeController.getView);
+app.get('/payee/edit/:id', passportConfig.isAuthenticated, payeeController.getEdit);
+app.post('/payee/save/:id', passportConfig.isAuthenticated, payeeController.postSave);
 
 app.get('/forecast', passportConfig.isAuthenticated, forecastController.getIndex);
 

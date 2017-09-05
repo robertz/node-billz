@@ -5,25 +5,26 @@ block content
     .panel-heading
         h5= data.name
     .panel-body
-        form.form(method='post', href='/payee/' + data._id)
-            input(type='hidden', name='_csrf', value=_csrf)
-            .row
-                .col-sm-12
-                    label Name:
-                        input(type = 'text', name = 'name', class = 'form-control', value = data.name)
-                .col-sm-12
-                    label Payment URL:
-                        input(type = 'text', name = 'url', class = 'form-control', value = data.url)
-                .col-sm-12
-                    label Description:
-                        input(type = 'text', name = 'description', class = 'form-control', value = data.description)
-                .col-sm-12
-                    label Due:
-                        input(type = 'date', name = 'ref', class = 'form-control', value = moment(data.ref).format('YYYY-MM-DD'))
-                .col-sm-12
-                    label Amount:
-                        input(type = 'text', name = 'amount', class = 'form-control', value = data.amount)
-                .col-sm-12
-                    input(type='submit', class='btn btn-primary', value='Submit')
-                    | &nbsp;&nbsp;
-                    a(class='btn btn-warning', href='/payee') Cancel
+        .row
+            .col-xs-6
+                .row
+                    .col-xs-4
+                        small(style='font-variant: small-caps;') Due Date
+                        h4 #{moment(data.ref).format('Do')}
+                    .col-xs-4
+                        small(style='font-variant: small-caps;') Amount
+                        h4 #{formatCurrency(data.amount, {format: '%s%v', code: 'USD', symbol: '$'})}
+            .col-xs-6
+                .row
+                    .col-xs-12
+                        .well
+                            p you are here
+        .row
+            .col-xs-12
+                h6 Description:
+                p #{data.description}
+        .row 
+            .col-xs-12
+                a(class='btn btn-success' href='/payee/edit/' + data.id) Edit 
+                | 
+                a(class='btn btn-primary' href='/payee') Payees

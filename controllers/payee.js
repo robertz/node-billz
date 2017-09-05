@@ -36,13 +36,33 @@ exports.getView = (req, res) => {
     if(req.params.id){
         Payee
             .findOne({_id: req.params.id, owner: req.user._id}, (err, payee) => {
-
                 Payments
                     .find({ owner: req.user.id,  payee:payee.id }, (err, payments) => {
                         res.render('payees/view', {
-                            title: 'Edit Payee',
+                            title: 'View Payee',
                             data: payee,
                             payments: payments
+                        });
+                    })
+            });
+    }
+
+};
+
+/**
+ * @function getEdit
+ * @param {string} params.id - route param that contains the id of the payee
+ */
+exports.getEdit = (req, res) => {
+    if (req.params.id) {
+        Payee
+            .findOne({ _id: req.params.id, owner: req.user._id }, (err, payee) => {
+
+                Payments
+                    .find({ owner: req.user.id, payee: payee.id }, (err, payments) => {
+                        res.render('payees/edit', {
+                            title: 'Edit Payee',
+                            payee: payee
                         });
                     })
 
