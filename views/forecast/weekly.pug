@@ -29,4 +29,4 @@ block content
                                 br
                                 | #{payee.description}
                             td 
-                                a(class='btn btn-warning' style='width: 100%') $#{formatCurrency(payee.amount)}
+                                a(class='btn btn-warning' style='width: 100%') #{formatCurrency(payee.amount, {format: '%s%v', code: 'USD', symbol: '$'})}
