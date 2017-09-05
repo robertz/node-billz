@@ -17,10 +17,14 @@ block content
                         tr
                             th(width='20%') Date
                             th Name
-                            th(width='10%') Amount
+                            th(width='10%') Mark Paid
                     for payee in week.payees
                         tr
                             td #{moment(payee.date).format('dddd, M/D/YYYY')}
                             td #{payee.name}
+                                if payee.url
+                                    | here
+                                br
+                                | #{payee.description}
                             td 
                                 a(class='btn btn-warning' style='width: 100%') $#{formatCurrency(payee.amount)}

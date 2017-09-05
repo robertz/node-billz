@@ -5,7 +5,7 @@ const Moment = require('moment');
 
 exports.getIndex = (req, res) => {
     Payee
-        .find({ owner: req.user.id }, null, { }, (err, payees) => {
+        .find({ owner: req.user._id }, null, { sort: { ref: 1 } }, (err, payees) => {
 
             if (err) { return next(err); }
             let ref = new Moment();
@@ -46,6 +46,7 @@ exports.getIndex = (req, res) => {
                         let payeeData = {
                             date: eventDate,
                             name: payees[i].name,
+                            description: payees[i].description,
                             amount: payees[i].amount
                         };
 
