@@ -18,11 +18,12 @@ const passport = require('passport');
 const expressValidator = require('express-validator');
 const expressStatusMonitor = require('express-status-monitor');
 const sass = require('node-sass-middleware');
+
+
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
  */
-
-dotenv.load({ path: '.env' });
+dotenv.load({ path: '.env' }); // .env.node-billz for default config
 
 
 /**
@@ -62,7 +63,9 @@ mongoose.connection.on('error', (err) => {
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
-app.use(expressStatusMonitor());
+app.use(expressStatusMonitor({
+    path: process.env.STATUS_URL || '/status'
+}));
 app.use(compression());
 app.use(sass({
   src: path.join(__dirname, 'public'),
