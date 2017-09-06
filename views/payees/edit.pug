@@ -3,9 +3,9 @@ extends ../layout
 block content
   .panel.panel-primary
     .panel-heading
-        h5 Create/Edit Payee
+        h5 Edit Payee
     .panel-body
-        form.form(method='post' href='/payee/create')
+        form.form(method='post' action='/payee/save/' + payee.id)
             input(type='hidden' name='_csrf' value=_csrf)
             .row
                 .col-sm-12

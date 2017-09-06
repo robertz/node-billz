@@ -5,7 +5,7 @@ block content
     .panel-heading
         h5 Create a new Payee
     .panel-body
-        form.form(method='post' href='/payee/create')
+        form.form(method='post' action='/payee/create')
             input(type='hidden' name='_csrf' value=_csrf)
             .row
                 .col-sm-12

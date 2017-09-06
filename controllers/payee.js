@@ -130,7 +130,7 @@ exports.postSave = (req, res) => {
 
     if (errors) {
         req.flash('errors', errors);
-        return res.redirect('/payee/' + req.params.id);
+        return res.redirect('/payee/edit/' + req.params.id);
     }
 
     Payee
