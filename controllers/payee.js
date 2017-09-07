@@ -9,7 +9,7 @@ const moment = require('moment');
  */
 exports.getIndex = (req, res) => {
     Payee
-        .find({owner: req.user._id}, null, {sort:{ref: 1}}, (err, payees) => {
+        .find({ owner: req.user._id }, null, { sort: { ref: 1 } }, (err, payees) => {
             
             if (err) {return next(err);}
             res.render('payees/list', {
@@ -29,9 +29,9 @@ exports.getIndex = (req, res) => {
 exports.getView = (req, res) => {
     if(req.params.id){
         Payee
-            .findOne({_id: req.params.id, owner: req.user._id}, (err, payee) => {
+            .findOne({ _id: req.params.id, owner: req.user._id }, (err, payee) => {
                 Payments
-                    .find({ owner: req.user.id,  payee: req.params.id }, (err, payments) => {
+                    .find({ owner: req.user.id, payee: req.params.id }, null, { sort: { ref: -1 } }, (err, payments) => {
 
                         let avgPayment = payee.amount;
                         if (payments.length) {
