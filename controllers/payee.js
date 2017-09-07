@@ -38,9 +38,15 @@ exports.getView = (req, res) => {
             .findOne({_id: req.params.id, owner: req.user._id}, (err, payee) => {
                 Payments
                     .find({ owner: req.user.id,  payee:payee.id }, (err, payments) => {
+
+                        let avgPayment = payee.amount;
+                        if(payments.length){
+                            avgPayment = payments.reduce((acc, payment) => acc + payment.amount, 0) / payments.length;
+                        }
                         res.render('payees/view', {
                             title: 'View Payee',
-                            data: payee,
+                            payee: payee,
+                            avgPayment: avgPayment,
                             payments: payments
                         });
                     })

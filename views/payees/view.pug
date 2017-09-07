@@ -3,17 +3,20 @@ extends ../layout
 block content
   .panel.panel-primary
     .panel-heading
-        h5= data.name
+        h5= payee.name
     .panel-body
         .row
             .col-xs-6
                 .row
                     .col-xs-4
                         small(style='font-variant: small-caps;') Due Date
-                        h4 #{moment(data.ref).format('Do')}
+                        h4 #{moment(payee.ref).format('Do')}
                     .col-xs-4
                         small(style='font-variant: small-caps;') Amount
-                        h4 #{formatCurrency(data.amount, {format: '%s%v', code: 'USD', symbol: '$'})}
+                        h4 #{formatCurrency(payee.amount, {format: '%s%v', code: 'USD', symbol: '$'})}
+                    .col-xs-4
+                        small(style='font-variant: small-caps;') Average
+                        h4 #{formatCurrency(avgPayment, {format: '%s%v', code: 'USD', symbol: '$'})}
             .col-xs-6
                 .row
                     .col-xs-12
@@ -22,9 +25,9 @@ block content
         .row
             .col-xs-12
                 h6 Description:
-                p #{data.description}
+                p #{payee.description}
         .row 
             .col-xs-12
-                a(class='btn btn-success' href='/payee/edit/' + data.id) Edit 
+                a(class='btn btn-primary' href='/payee' style='width: 150px;') Back to Payees 
                 | 
-                a(class='btn btn-primary' href='/payee') Payees
+                a(class='btn btn-success' href='/payee/edit/' + payee.id style='width: 150px;') Edit
