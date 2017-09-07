@@ -12,19 +12,13 @@ exports.getIndex = (req, res) => {
         .find({owner: req.user._id}, null, {sort:{ref: 1}}, (err, payees) => {
             
             if (err) {return next(err);}
-
-            // Build sums and count
-            let ownerData = {
-                sum: payees.reduce((acc, payee) => acc + payee.amount, 0),
-                count: payees.length
-            }
-
             res.render('payees/list', {
                 title: 'Payees',
                 payees: payees,
-                total: ownerData.sum,
-                count: ownerData.count
+                total: payees.reduce((acc, payee) => acc + payee.amount, 0),
+                count: payees.length
             });
+
         });
 };
 
@@ -37,15 +31,16 @@ exports.getView = (req, res) => {
         Payee
             .findOne({_id: req.params.id, owner: req.user._id}, (err, payee) => {
                 Payments
-                    .find({ owner: req.user.id,  payee:payee.id }, (err, payments) => {
+                    .find({ owner: req.user.id,  payee: req.params.id }, (err, payments) => {
 
                         let avgPayment = payee.amount;
-                        if(payments.length){
+                        if (payments.length) {
                             avgPayment = payments.reduce((acc, payment) => acc + payment.amount, 0) / payments.length;
                         }
                         res.render('payees/view', {
                             title: 'View Payee',
                             payee: payee,
+                            payDate: req.query.dt || '',
                             avgPayment: avgPayment,
                             payments: payments
                         });
@@ -159,4 +154,20 @@ exports.postSave = (req, res) => {
             });
         });
 
+};
+
+exports.postPay = (req, res) => {
+    let payment = new Payments();
+
+    payment.owner = req.user.id;
+    payment.payee = req.params.id;
+    payment.ref = req.body.ref;
+    payment.amount = req.body.amount;
+
+    payment.save((err) => {
+        if (err) { return next(err); }
+
+        req.flash('success', { msg: 'Your payment has been created.' });
+        res.redirect('/payee/view/' + req.params.id);
+    });
 };

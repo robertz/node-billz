@@ -44,6 +44,7 @@ exports.getIndex = (req, res) => {
                     let te = new Moment(endOfWeek).add(1, 'day');
                     if (eventDate.isBetween(ts, te)) {
                         let payeeData = {
+                            id: payees[i].id,
                             date: eventDate,
                             name: payees[i].name,
                             url: payees[i].url,

@@ -147,10 +147,11 @@ app.get('/payee', passportConfig.isAuthenticated, payeeController.getIndex);
 
 app.get('/payee/create', passportConfig.isAuthenticated, payeeController.getCreate);
 app.post('/payee/create', passportConfig.isAuthenticated, payeeController.postCreate);
-
 app.get('/payee/view/:id', passportConfig.isAuthenticated, payeeController.getView);
 app.get('/payee/edit/:id', passportConfig.isAuthenticated, payeeController.getEdit);
 app.post('/payee/save/:id', passportConfig.isAuthenticated, payeeController.postSave);
+app.post('/payee/pay/:id', passportConfig.isAuthenticated, payeeController.postPay);
+
 
 app.get('/forecast', passportConfig.isAuthenticated, forecastController.getIndex);
 

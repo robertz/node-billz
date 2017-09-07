@@ -28,4 +28,4 @@ block content
                                 br
                                 | #{payee.description}
                             td 
-                                a(class='btn btn-warning' style='width: 100%') #{formatCurrency(payee.amount, {format: '%s%v', code: 'USD', symbol: '$'})}
+                                a(class='btn btn-warning' style='width: 100%' href='/payee/view/' + payee.id + '?dt=' + moment(payee.date).format('YYYY-MM-DD')) #{formatCurrency(payee.amount, {format: '%s%v', code: 'USD', symbol: '$'})}
