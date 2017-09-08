@@ -155,7 +155,6 @@ app.post('/payee/pay/:id', passportConfig.isAuthenticated, payeeController.postP
 
 app.get('/forecast', passportConfig.isAuthenticated, forecastController.getIndex);
 
-
 /**
  * OAuth authentication routes. (Sign in)
  */
