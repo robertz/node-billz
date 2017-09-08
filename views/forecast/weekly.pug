@@ -28,4 +28,7 @@ block content
                                 br
                                 | #{payee.description}
                             td 
-                                a(class='btn btn-warning' style='width: 100%' href='/payee/view/' + payee.id + '?dt=' + moment(payee.date).format('YYYY-MM-DD')) #{formatCurrency(payee.amount, {format: '%s%v', code: 'USD', symbol: '$'})}
+                                if payee.isPaid == false
+                                    a.btn.btn-warning(style='width: 100%' href='/payee/view/' + payee.id + '?dt=' + moment(payee.date).format('YYYY-MM-DD')) #{formatCurrency(payee.amount, {format: '%s%v', code: 'USD', symbol: '$'})}
+                                else
+                                    a.btn.btn-success(style='width: 100%' href='/payee/view/' + payee.id) Paid
