@@ -2,7 +2,7 @@ const Payee = require('../models/Payee');
 const Payments = require('../models/Payment');
 
 const formatCurrency = require('format-currency');
-const moment = require('moment');
+const moment = require('moment-timezone');
 
 /**
  * @function getIndex
@@ -69,7 +69,6 @@ exports.getEdit = (req, res) => {
 
             });
     }
-
 };
 
 /**

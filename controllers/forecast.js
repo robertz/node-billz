@@ -43,16 +43,12 @@ exports.getIndex = (req, res) => {
                             if (eventDate.isBefore(startOfWeek)) {
                                 eventDate.add(1, 'month');
                             }
-
-
-
-                            
-
                             // ts and te is one day before and one day after so dates fall in between
                             let ts = new Moment(startOfWeek).subtract(1, 'day');
                             let te = new Moment(endOfWeek).add(1, 'day');
                             if (eventDate.isBetween(ts, te)) {
 
+                                // is it paid?
                                 let isPaid = payments.filter((payment) => {
                                     return payment.payee == payees[i].id && payment.ref == eventDate.format('YYYY-MM-DD');
                                 });
@@ -73,9 +69,7 @@ exports.getIndex = (req, res) => {
                             }
                         }
                         weeklyTemplate['percentMonth'] = (weeklyTemplate.amountDue / monthlyTotal) * 100;
-
                         weekly.push(weeklyTemplate);
-
 
                     }
 
