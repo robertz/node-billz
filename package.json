@@ -19,6 +19,7 @@
     "env": {
       "NODE_ENV": "production"
     },
+    "dotenv": ".env",
     "type": "npm"
   },
   "dependencies": {
@@ -46,6 +47,7 @@
     "lob": "^3.9.0",
     "lusca": "^1.4.1",
     "moment": "^2.18.1",
+    "moment-timezone": "^0.5.13",
     "mongoose": "^4.6.6",
     "morgan": "^1.7.0",
     "node-foursquare": "^0.3.0",

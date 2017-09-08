@@ -118,7 +118,9 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }))
  *  Page level utilities
  */
 app.locals.formatCurrency = require('format-currency');
-app.locals.moment = require('moment');
+app.locals.moment = require('moment-timezone');
+
+app.locals.moment.tz.setDefault('America/New_York');
 
 /**
  * Primary app routes.
