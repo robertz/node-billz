@@ -1,3 +1,4 @@
+/* global require exports next */
 const Payee = require('../models/Payee');
 const Payments = require('../models/Payment');
 
@@ -41,7 +42,7 @@ exports.getView = (req, res) => {
                             avgPayment: avgPayment,
                             payments: payments
                         });
-                    })
+                    });
             });
     }
 
@@ -62,7 +63,7 @@ exports.getEdit = (req, res) => {
                             title: 'Edit Payee',
                             payee: payee
                         });
-                    })
+                    });
 
             });
     }

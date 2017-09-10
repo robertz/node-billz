@@ -1,4 +1,4 @@
-
+/* global require exports next */
 const Payee = require('../models/Payee');
 const Payment = require('../models/Payment');
 const Moment = require('moment-timezone');
