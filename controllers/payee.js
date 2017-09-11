@@ -1,4 +1,5 @@
 /* global require exports next */
+/* eslint no-unused-vars: off */
 const Payee = require('../models/Payee');
 const Payments = require('../models/Payment');
 
