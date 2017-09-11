@@ -176,8 +176,8 @@ exports.getDelete = (req, res) => {
             .findOne({ _id: req.params.id, owner: req.user._id, deleted: false }, (err, payee) => {
 
                 payee.deleted = true;
-                payee.active = false'
-                
+                payee.active = false;
+
                 payee.save((err) => {
                     req.flash('success', {msg: 'Payee ' + payee.name + ' has been deleted'});
                     res.redirect('/payee');
