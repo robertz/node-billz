@@ -2,44 +2,58 @@
 /* eslint no-unused-vars: off */
 const Payee = require('../models/Payee');
 const Payment = require('../models/Payment');
-const Moment = require('moment-timezone');
 
-exports.getView = (req, res) => {
+exports.getView = async (req, res) => {
 
-    Payee
-        .find({ owner: req.user._id }, null, { sort: { ref: 1 } }, (err, payees) => {
-            Payment
-                .find({ owner: req.user._id }, null, { sort: { ref: -1 } }, (err, payments) => {
+    const getPayees = () => {
+        return Payee.find({ owner: req.user.id })
+            .then((payees) => {
+                return payees;
+            });
+    };
 
-                    // Stub out the page payload
-                    let data = {
-                        payments: []
-                    };
+    const getPayments = () => {
+        return Payment.find({ owner: req.user.id })
+            .then((payments) => {
+                return payments;
+            });
+    };
 
-                    for (let payment of payments) {
+    try{
+        let payees = await getPayees();
+        let payments = await getPayments();
 
-                        // Get some information about the payee.. Should always exist
-                        let payeeName = payees.filter((payee) => {
-                            return payee.id === payment.payee;
-                        });
+        // Stub out the page payload
+        let data = {
+            payments: []
+        };
 
-                        // Push payment to payment array
-                        data.payments.push({
-                            name: payeeName[0].name,
-                            payee: payment.payee,
-                            ref: payment.ref,
-                            createdAt: payment.createdAt,
-                            amount: payment.amount
-                        });
-                    }
+        for (let payment of payments) {
 
-                    // Render it
-                    res.render('payments/view', {
-                        title: 'Payments',
-                        data: data
-                    });
+            // Get some information about the payee.. Should always exist
+            let payeeName = payees.filter((payee) => {
+                return payee.id === payment.payee;
+            });
 
-                });
+            // Push payment to payment array
+            data.payments.push({
+                name: payeeName[0].name,
+                payee: payment.payee,
+                ref: payment.ref,
+                createdAt: payment.createdAt,
+                amount: payment.amount
+            });
+        }
+
+        // Render it
+        res.render('payments/view', {
+            title: 'Payments',
+            data: data
         });
+    }
+    catch (err) {
+        req.flash('error', { msg: 'Error loading data' });
+        res.redirect('/');
+    }
 
 };
