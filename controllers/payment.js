@@ -52,7 +52,7 @@ exports.getView = async (req, res) => {
         });
     }
     catch (err) {
-        req.flash('error', { msg: 'Error loading data' });
+        req.flash('error', { msg: 'There was an error attempting to load the requested page' });
         res.redirect('/');
     }
 
