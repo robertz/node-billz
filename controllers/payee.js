@@ -3,9 +3,6 @@
 const Payee = require('../models/Payee');
 const Payments = require('../models/Payment');
 
-/**
- * @function getIndex
- */
 exports.getIndex = (req, res) => {
     Payee
         .find({ owner: req.user._id, deleted: false }, null, { sort: { ref: 1 } }, (err, payees) => {
@@ -21,10 +18,6 @@ exports.getIndex = (req, res) => {
         });
 };
 
-/**
- * @function getView
- * @param {string} params.id - route param that contains the id of the payee
- */
 exports.getView = (req, res) => {
     if(req.params.id) {
         Payee
@@ -49,10 +42,6 @@ exports.getView = (req, res) => {
 
 };
 
-/**
- * @function getEdit
- * @param {string} params.id - route param that contains the id of the payee
- */
 exports.getEdit = (req, res) => {
     if (req.params.id) {
         Payee
@@ -70,10 +59,6 @@ exports.getEdit = (req, res) => {
     }
 };
 
-/**
- * @function getCreate
- * @param {string} params.id - route param that contains the id of the payee
- */
 exports.getCreate = (req, res) => {
     Payee
         .findOne({_id: req.params.id, owner: req.user._id, deleted: false}, (err, payee) => {
@@ -86,13 +71,6 @@ exports.getCreate = (req, res) => {
         });
 };
 
-/**
- * @function postCreate
- * @param {string} body.name - name of the payee
- * @param {string} body.description - description of the payee
- * @param {numeric} body.due - day of month a payee is due
- * @param {numeric} body.amount - the amount of the payment
- */
 exports.postCreate = (req, res) => {
     let payee = new Payee();
 
@@ -114,14 +92,7 @@ exports.postCreate = (req, res) => {
 
 };
 
-/**
- * @function postSave
- * @param {string} params.id - route param that contains the id of the payee
- * @param {string} body.name - name of the payee
- * @param {string} body.description - description of the payee
- * @param {numeric} body.due - day of month a payee is due
- * @param {numeric} body.amount - the amount of the payment
- */
+
 exports.postSave = (req, res) => {
     req.assert('name', 'You must enter a name for this payee').len(1);
     
@@ -172,17 +143,21 @@ exports.postPay = (req, res) => {
 
 exports.getDelete = (req, res) => {
     if (req.params.id) {
-        Payee
-            .findOne({ _id: req.params.id, owner: req.user._id, deleted: false }, (err, payee) => {
 
-                payee.deleted = true;
-                payee.active = false;
+        // Delete the payee
+        Payee.remove({ owner: req.user.id, id: req.params.id }, (err) => {
+            if (err) { return next(err); }
 
-                payee.save((err) => {
-                    req.flash('success', {msg: 'Payee ' + payee.name + ' has been deleted'});
-                    res.redirect('/payee');
-                });
+            // and all associated payments
+            Payments.remove({ owner: req.user.id, payee: req.params.id }, (err) => {
+                if (err) { return next(err); }
+
+                req.flash('success', { msg: 'Payee and any associated payments have been removed!' });
+                res.redirect('/payee');
 
             });
+
+        });
+
     }
 };

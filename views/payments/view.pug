@@ -1,0 +1,20 @@
+extends ../layout
+
+block content
+    .panel.panel-primary
+        .panel-heading
+            h5 Recent Payments
+        table.table.table-striped
+            thead
+                tr
+                    th Name
+                    th Due
+                    th Entered
+                    th Amount
+            for payment in data.payments
+                tr
+                    td 
+                        a(href='/payee/view/' + payment.payee) #{payment.name}
+                    td #{moment(payment.ref).format('MMMM Do YYYY')}
+                    td #{moment(payment.createdAt).format('MMMM Do YYYY, h:mm:ss a')}
+                    td #{formatCurrency(payment.amount, {format: '%s%v', code: 'USD', symbol: '$'})}

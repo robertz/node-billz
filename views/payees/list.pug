@@ -21,13 +21,13 @@ block content
             thead
                 tr
                     th Name
-                    th Description
+                    th.hidden-xs Description
                     th Due
                     th Amount
             for payee in payees
                 tr
                     td
                         a(href="/payee/view/" + payee._id) #{payee.name}
-                    td(class='hidden-xs') #{payee.description}
+                    td.hidden-xs #{payee.description}
                     td #{moment(payee.ref).format('Do')}
                     td $#{formatCurrency(payee.amount)}

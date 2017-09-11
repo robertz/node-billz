@@ -33,6 +33,7 @@ const homeController = require('./controllers/home');
 const userController = require('./controllers/user');
 const payeeController = require('./controllers/payee');
 const forecastController = require('./controllers/forecast');
+const paymentController = require('./controllers/payment');
 
 /**
  * API keys and Passport configuration.
@@ -145,6 +146,8 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
 /**
  * node-billz specific routes
  */
+
+ // payee related routes
 app.get('/payee', passportConfig.isAuthenticated, payeeController.getIndex);
 app.get('/payee/create', passportConfig.isAuthenticated, payeeController.getCreate);        // Data entry for new payee
 app.post('/payee/create', passportConfig.isAuthenticated, payeeController.postCreate);      // Save a new payee
@@ -154,8 +157,11 @@ app.post('/payee/save/:id', passportConfig.isAuthenticated, payeeController.post
 app.post('/payee/pay/:id', passportConfig.isAuthenticated, payeeController.postPay);        // Make a payment
 app.get('/payee/delete/:id', passportConfig.isAuthenticated, payeeController.getDelete);    // Delete a payee
 
+// forecast related routes
 app.get('/forecast', passportConfig.isAuthenticated, forecastController.getIndex);
 
+// payment related routes
+app.get('/payment', passportConfig.isAuthenticated, paymentController.getView);
 /**
  * OAuth authentication routes. (Sign in)
  */

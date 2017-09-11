@@ -13,7 +13,13 @@ exports.getIndex = (req, res) => {
                 .find({ owner: req.user._id }, null, { sort: { ref: 1 } }, (err, payments) => {
 
                     if (err) { return next(err); }
+
+                    // if dt is passed in the url attempt to set the date
                     let ref = new Moment();
+                    if (new Moment(req.query.dt).isValid()) {
+                        ref = new Moment(req.query.dt);
+                    }
+
                     let weekly = [];
                     let monthlyTotal = payees.reduce((acc, payee) => acc + payee.amount, 0);
 
@@ -45,7 +51,7 @@ exports.getIndex = (req, res) => {
                         for (let i = 0; i < payees.length; i++) {
 
                             // How many months to add to bring the reference date to the current month
-                            let diff = new Moment().diff(payees[i].ref, 'months');
+                            let diff = new Moment(ref).diff(payees[i].ref, 'months');
                             let eventDate = new Moment(payees[i].ref).add(diff, 'months');
                             if (eventDate.isBefore(startOfWeek)) {
                                 eventDate.add(1, 'month');
