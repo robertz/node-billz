@@ -8,7 +8,7 @@ const Payments = require('../models/Payment');
  */
 exports.getIndex = (req, res) => {
     Payee
-        .find({ owner: req.user._id }, null, { sort: { ref: 1 } }, (err, payees) => {
+        .find({ owner: req.user._id, deleted: false }, null, { sort: { ref: 1 } }, (err, payees) => {
             
             if (err) {return next(err);}
             res.render('payees/list', {
@@ -26,14 +26,14 @@ exports.getIndex = (req, res) => {
  * @param {string} params.id - route param that contains the id of the payee
  */
 exports.getView = (req, res) => {
-    if(req.params.id){
+    if(req.params.id) {
         Payee
-            .findOne({ _id: req.params.id, owner: req.user._id }, (err, payee) => {
+            .findOne({ _id: req.params.id, owner: req.user._id, deleted: false }, (err, payee) => {
                 Payments
                     .find({ owner: req.user.id, payee: req.params.id }, null, { sort: { ref: -1 } }, (err, payments) => {
 
                         let avgPayment = payee.amount;
-                        if (payments.length) {
+                        if(payments.length) {
                             avgPayment = payments.reduce((acc, payment) => acc + payment.amount, 0) / payments.length;
                         }
                         res.render('payees/view', {
@@ -56,7 +56,7 @@ exports.getView = (req, res) => {
 exports.getEdit = (req, res) => {
     if (req.params.id) {
         Payee
-            .findOne({ _id: req.params.id, owner: req.user._id }, (err, payee) => {
+            .findOne({ _id: req.params.id, owner: req.user._id, deleted: false }, (err, payee) => {
 
                 Payments
                     .find({ owner: req.user.id, payee: payee.id }, (err, payments) => {
@@ -76,7 +76,7 @@ exports.getEdit = (req, res) => {
  */
 exports.getCreate = (req, res) => {
     Payee
-        .findOne({_id: req.params.id, owner: req.user._id}, (err, payee) => {
+        .findOne({_id: req.params.id, owner: req.user._id, deleted: false}, (err, payee) => {
 
             if (err) {return next(err);}
             
@@ -168,4 +168,21 @@ exports.postPay = (req, res) => {
         req.flash('success', { msg: 'Your payment has been created.' });
         res.redirect('/payee/view/' + req.params.id);
     });
+};
+
+exports.getDelete = (req, res) => {
+    if (req.params.id) {
+        Payee
+            .findOne({ _id: req.params.id, owner: req.user._id, deleted: false }, (err, payee) => {
+
+                payee.deleted = true;
+                payee.active = false'
+                
+                payee.save((err) => {
+                    req.flash('success', {msg: 'Payee ' + payee.name + ' has been deleted'});
+                    res.redirect('/payee');
+                });
+
+            });
+    }
 };

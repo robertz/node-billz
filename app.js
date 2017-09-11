@@ -152,6 +152,7 @@ app.get('/payee/view/:id', passportConfig.isAuthenticated, payeeController.getVi
 app.get('/payee/edit/:id', passportConfig.isAuthenticated, payeeController.getEdit);        // Edit a payee
 app.post('/payee/save/:id', passportConfig.isAuthenticated, payeeController.postSave);      // Update a payee
 app.post('/payee/pay/:id', passportConfig.isAuthenticated, payeeController.postPay);        // Make a payment
+app.get('/payee/delete/:id', passportConfig.isAuthenticated, payeeController.getDelete);    // Delete a payee
 
 app.get('/forecast', passportConfig.isAuthenticated, forecastController.getIndex);
 

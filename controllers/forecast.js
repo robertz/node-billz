@@ -17,7 +17,7 @@ exports.getIndex = (req, res) => {
                     let weekly = [];
                     let monthlyTotal = payees.reduce((acc, payee) => acc + payee.amount, 0);
 
-                    for(let otr = 0; otr < 4; otr++){
+                    for(let otr = 0; otr < 4; otr++) {
                         // Add 1 week to the reference date if it is not the initial week
                         if(otr) ref.add(1, 'weeks');
 

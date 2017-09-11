@@ -10,18 +10,20 @@ block content
             .row
                 .col-sm-12
                     label Name:
-                        input(type='text' name='name' class='form-control' value=payee.name)
+                        input.form-control(type='text' name='name' value=payee.name)
                 .col-sm-12
                     label Payment URL:
-                        input(type='text' name='url' class='form-control' value=payee.url)
+                        input.form-control(type='text' name='url' value=payee.url)
                 .col-sm-12
                     label Description:
-                        input(type='text' name='description' class='form-control' value=payee.description)
+                        input.form-control(type='text' name='description' value=payee.description)
                 .col-sm-12
                     label Due:
-                        input(type='date' name='ref' class='form-control' value=payee.ref)
+                        input.form-control(type='date' name='ref' value=payee.ref)
                 .col-sm-12
                     label Amount:
-                        input(type='text' name='amount' class='form-control' value=payee.amount)
+                        input.form-control(type='text' name='amount' value=payee.amount)
                 .col-sm-12
-                    input(type='submit' class='btn btn-primary' value='Submit')
+                    input.btn.btn-primary(type='submit' value='Submit') 
+                    | 
+                    a.btn.btn-danger(href='/payee/delete/' + payee.id) Delete Payee
