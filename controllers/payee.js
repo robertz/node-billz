@@ -3,42 +3,72 @@
 const Payee = require('../models/Payee');
 const Payments = require('../models/Payment');
 
-exports.getIndex = (req, res) => {
-    Payee
-        .find({ owner: req.user._id, deleted: false }, null, { sort: { ref: 1 } }, (err, payees) => {
-            
-            if (err) {return next(err);}
-            res.render('payees/list', {
-                title: 'Payees',
-                payees: payees,
-                total: payees.reduce((acc, payee) => acc + payee.amount, 0),
-                count: payees.length
-            });
+exports.getIndex = async (req, res) => {
 
-        });
+    const getPayees = () => {
+        return Payee.find({ owner: req.user.id })
+            .sort({ ref: 1 })
+            .then((payees) => {
+                return payees;
+            });
+    };
+
+    try {
+        let payees = await getPayees();
+
+        res.render('payees/list', {
+            title: 'Payees',
+            payees: payees,
+            total: payees.reduce((acc, payee) => acc + payee.amount, 0),
+            count: payees.length
+        });        
+    }
+    catch (err) {
+        req.flash('errors', { msg: 'There was an error attempting to load the requested page' });
+        res.redirect('/');
+    }
+
 };
 
-exports.getView = (req, res) => {
-    if(req.params.id) {
-        Payee
-            .findOne({ _id: req.params.id, owner: req.user._id, deleted: false }, (err, payee) => {
-                Payments
-                    .find({ owner: req.user.id, payee: req.params.id }, null, { sort: { ref: -1 } }, (err, payments) => {
+exports.getView = async (req, res) => {
 
-                        let avgPayment = payee.amount;
-                        if(payments.length) {
-                            avgPayment = payments.reduce((acc, payment) => acc + payment.amount, 0) / payments.length;
-                        }
-                        res.render('payees/view', {
-                            title: 'View Payee',
-                            payee: payee,
-                            payDate: req.query.dt || '',
-                            avgPayment: avgPayment,
-                            payments: payments
-                        });
-                    });
+    const getPayee = () => {
+        return Payee.findOne({ _id: req.params.id, owner: req.user.id})
+            .then((payee) => {
+                return payee;
             });
+    };
+
+    const getPayments = () => {
+        return Payments.find({ owner: req.user.id, payee: req.params.id})
+            .sort({ ref: -1 })
+            .then((payments) => {
+                return payments;
+            })
+    };
+
+    try {
+        let payee = await getPayee();
+        let payments = await getPayments();
+
+        let avgPayment = payee.amount;
+        if (payments.length) {
+            avgPayment = payments.reduce((acc, payment) => acc + payment.amount, 0) / payments.length;
+        }
+
+        res.render('payees/view', {
+            title: 'View Payee',
+            payee: payee,
+            payDate: req.query.dt || '',
+            avgPayment: avgPayment,
+            payments: payments
+        });
     }
+    catch (err) {
+        req.flash('errors', { msg: 'There was an error attempting to load the requested page' });
+        res.redirect('/');
+    }
+
 
 };
 
@@ -46,29 +76,18 @@ exports.getEdit = (req, res) => {
     if (req.params.id) {
         Payee
             .findOne({ _id: req.params.id, owner: req.user._id, deleted: false }, (err, payee) => {
-
-                Payments
-                    .find({ owner: req.user.id, payee: payee.id }, (err, payments) => {
-                        res.render('payees/edit', {
-                            title: 'Edit Payee',
-                            payee: payee
-                        });
-                    });
-
+                res.render('payees/edit', {
+                    title: 'Edit Payee',
+                    payee: payee
+                });
             });
     }
 };
 
 exports.getCreate = (req, res) => {
-    Payee
-        .findOne({_id: req.params.id, owner: req.user._id, deleted: false}, (err, payee) => {
-
-            if (err) {return next(err);}
-            
-            res.render('payees/create', {
-                title: 'Create Payee'
-            });
-        });
+    res.render('payees/create', {
+        title: 'Create Payee'
+    });
 };
 
 exports.postCreate = (req, res) => {
