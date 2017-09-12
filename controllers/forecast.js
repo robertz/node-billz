@@ -50,8 +50,8 @@ exports.getIndex = async (req, res) => {
 
         // The data structure for one week of bills
         let weeklyTemplate = {
-            start: startOfWeek.format('dddd, MMMM Do YYYY'),
-            end: endOfWeek.format('dddd, MMMM Do YYYY'),
+            start: startOfWeek,
+            end: endOfWeek,
             amountDue: 0,
             amountPaid: 0,
             count: 0,

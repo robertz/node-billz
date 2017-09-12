@@ -5,7 +5,7 @@ block content
         for week in weeks
             .panel.panel-primary
                 .panel-heading
-                    | #{week.start} - #{week.end}
+                    | #{moment(week.start).format('dddd, MMMM Do YYYY')} - #{moment(week.end).format('dddd, MMMM Do YYYY')}
                 .panel-body
                     .row
                         .col-xs-6.col-sm-4
