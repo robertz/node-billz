@@ -14,6 +14,7 @@ exports.getView = async (req, res) => {
 
     const getPayments = () => {
         return Payment.find({ owner: req.user.id })
+            .sort({ ref: -1 })
             .then((payments) => {
                 return payments;
             });
