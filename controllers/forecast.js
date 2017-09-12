@@ -40,8 +40,7 @@ exports.getIndex = async (req, res) => {
 
             // adjust the start of the week to the user offset.. 0 = Sunday 6 = Saturday
             let startOfWeek = new Moment(ref).startOf('week').subtract(7 - req.user.offset, 'days');
-
-            // Adjust the startOfWeek in cases where it is adjusted too far back
+            // Compensate for offset logic going too far back
             if (ref.diff(startOfWeek, 'days') >= 7) {
                 startOfWeek.add(7, 'days');
             }

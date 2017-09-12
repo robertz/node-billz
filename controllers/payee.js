@@ -33,14 +33,14 @@ exports.getIndex = async (req, res) => {
 exports.getView = async (req, res) => {
 
     const getPayee = () => {
-        return Payee.findOne({ _id: req.params.id, owner: req.user.id})
+        return Payee.findOne({ _id: req.params.id, owner: req.user.id })
             .then((payee) => {
                 return payee;
             });
     };
 
     const getPayments = () => {
-        return Payments.find({ owner: req.user.id, payee: req.params.id})
+        return Payments.find({ owner: req.user.id, payee: req.params.id })
             .sort({ ref: -1 })
             .then((payments) => {
                 return payments;
@@ -68,7 +68,6 @@ exports.getView = async (req, res) => {
         req.flash('errors', { msg: 'There was an error attempting to load the requested page' });
         res.redirect('/');
     }
-
 
 };
 
