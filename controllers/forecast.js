@@ -29,16 +29,14 @@ exports.getIndex = async (req, res) => {
 
         // if dt is passed in the url attempt to set the date
         let ref = new Moment();
-        if (new Moment(req.query.dt).isValid()) {
-            ref = new Moment(req.query.dt);
-        }
+        if (new Moment(req.query.dt).isValid()) ref = new Moment(req.query.dt);
 
         let weekly = [];
         let monthlyTotal = payees.reduce((acc, payee) => acc + payee.amount, 0);
 
         for (let otr = 0; otr < 4; otr++) {
             // Add 1 week to the reference date if it is not the initial week
-            if (otr) ref.add(1, 'weeks');
+            if (otr) ref.add(1, 'week');
 
             // adjust the start of the week to the user offset.. 0 = Sunday 6 = Saturday
             let startOfWeek = new Moment(ref).startOf('week').subtract(7 - req.user.offset, 'days');
