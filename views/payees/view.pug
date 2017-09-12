@@ -6,7 +6,7 @@ block content
             h5= payee.name
         .panel-body
             .row
-                .col-xs-6
+                .col-xs-12.col-md-6
                     .row
                         .col-xs-4
                             small(style='font-variant: small-caps;') Due Date
@@ -17,7 +17,7 @@ block content
                         .col-xs-4
                             small(style='font-variant: small-caps;') Average
                             h4 #{formatCurrency(avgPayment, {format: '%s%v', code: 'USD', symbol: '$'})}
-                .col-xs-6
+                .col-xs-12.col-md-6
                     .row
                         .col-xs-12
                             .well
@@ -34,13 +34,11 @@ block content
                     p #{payee.description}
             .row 
                 .col-xs-12
-                    a(class='btn btn-primary' href='/payee' style='width: 150px;') Back to Payees 
+                    a(class='btn btn-primary' href='/payee') Payees 
                     | 
-                    a(class='btn btn-warning' href='/forecast' style='width: 150px;') Forecast 
+                    a(class='btn btn-warning' href='/forecast') Forecast 
                     | 
-                    a(class='btn btn-success' href='/payee/edit/' + payee.id style='width: 150px;') Edit
-
-
+                    a(class='btn btn-success' href='/payee/edit/' + payee.id) Edit
     if (payments.length)
         .panel.panel-primary
             .panel-heading
