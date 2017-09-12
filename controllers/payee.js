@@ -90,6 +90,18 @@ exports.getCreate = (req, res) => {
 };
 
 exports.postCreate = (req, res) => {
+    req.assert('name', 'You must enter a name for this payee').len(1);
+    req.sanitize('name');
+    req.sanitize('url');
+    req.sanitize('description');
+
+    const errors = req.validationErrors();
+
+    if (errors) {
+        req.flash('errors', errors);
+        return res.redirect('/payee/create');
+    }
+
     let payee = new Payee();
 
     payee.name = req.body.name || '';
@@ -97,23 +109,26 @@ exports.postCreate = (req, res) => {
     payee.description = req.body.description || '';
     payee.ref = req.body.ref || '';
     payee.amount = req.body.amount || '';
-    
+
     payee.owner = req.user._id;
     payee.intervalType = 'm';
 
     payee.save((err) => {
-        if (err) {return next(err);}
+        if (err) { return next(err); }
 
         req.flash('success', { msg: 'Your payee ' + payee.name + ' was successfully created.' });
         res.redirect('/payee/');
     });
 
+
 };
 
-
-exports.postSave = (req, res) => {
+exports.postSave = async (req, res) => {
     req.assert('name', 'You must enter a name for this payee').len(1);
-    
+    req.sanitize('name');
+    req.sanitize('url');
+    req.sanitize('description');
+
     const errors = req.validationErrors();
 
     if (errors) {
@@ -121,25 +136,30 @@ exports.postSave = (req, res) => {
         return res.redirect('/payee/edit/' + req.params.id);
     }
 
-    Payee
-        .findById(req.params.id, (err, payee) => {
-            if (err) {return next(err);}
+    const getPayee = () => {
+        return Payee.findById({ _id: req.params.id })
+            .then((payee) => {
+                return payee;
+            })
+    }; 
 
-            if (!payee) {
-                payee = new Payee();
-            }
+    let payee = await getPayee();
 
-            payee.name = req.body.name || '';
-            payee.url = req.body.url || '';
-            payee.description = req.body.description || '';
-            payee.ref = req.body.ref || '';
-            payee.amount = req.body.amount || '';
-            payee.save((err) => {
-                if (err) {return next(err);}
-                req.flash('success', { msg: 'Payee ' + payee.name + ' has been updated.' });
-                res.redirect('/payee');
-            });
-        });
+    if (!payee) {
+        payee = new Payee();
+    }
+
+    payee.name = req.body.name || '';
+    payee.url = req.body.url || '';
+    payee.description = req.body.description || '';
+    payee.ref = req.body.ref || '';
+    payee.amount = req.body.amount || '';
+
+    payee.save((err) => {
+        if (err) { return next(err); }
+        req.flash('success', { msg: 'Payee ' + payee.name + ' has been updated.' });
+        res.redirect('/payee');
+    });
 
 };
 
