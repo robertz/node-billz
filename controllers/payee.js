@@ -2,12 +2,13 @@
 /* eslint no-unused-vars: off */
 const Payee = require('../models/Payee');
 const Payments = require('../models/Payment');
+const Moment = require('moment-timezone');
 
 exports.getIndex = async (req, res) => {
 
     const getPayees = () => {
         return Payee.find({ owner: req.user.id })
-            .sort({ ref: 1 })
+            .sort({ day: 1 })
             .then((payees) => {
                 return payees;
             });
@@ -110,6 +111,7 @@ exports.postCreate = (req, res) => {
     payee.ref = req.body.ref || '';
     payee.amount = req.body.amount || '';
 
+    payee.day = new Moment(payee.ref).format('D');
     payee.owner = req.user._id;
     payee.intervalType = 'm';
 
@@ -154,6 +156,8 @@ exports.postSave = async (req, res) => {
     payee.description = req.body.description || '';
     payee.ref = req.body.ref || '';
     payee.amount = req.body.amount || '';
+
+    payee.day = new Moment(payee.ref).format('D');
 
     payee.save((err) => {
         if (err) { return next(err); }

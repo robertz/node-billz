@@ -8,6 +8,7 @@ const payeeSchema = new mongoose.Schema({
     ref: String,
     amount: { type: Number, min: 0, max: 99999 },
     url: String,
+    day: Number,
     active: { type: Boolean, default: true },
     deleted: { type: Boolean, default: false }
 }, {
