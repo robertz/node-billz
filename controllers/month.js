@@ -73,9 +73,9 @@ exports.getIndex = async (req, res) => {
             monthData.push(payeeData);
         }
 
-        let pctPaid = monthlyTotal ? amountPaid / monthlyTotal : 0;
-        let amountRemaining = monthlyTotal ? monthlyTotal - amountPaid : 0;
-        let pctRemain = monthlyTotal ? amountRemaining / monthlyTotal : 0;
+        let pctPaid = monthlyTotal ? (amountPaid / monthlyTotal) * 100 : 0;
+        let amountRemaining = monthlyTotal ? (monthlyTotal - amountPaid) : 0;
+        let pctRemain = monthlyTotal ? (amountRemaining / monthlyTotal) * 100 : 0;
 
         // Render it
         res.render('month/view', {
