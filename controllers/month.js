@@ -45,7 +45,9 @@ exports.getIndex = async (req, res) => {
             // How many months to add to bring the reference date to the current month
             let diff = new Moment(ref).diff(payees[i].ref, 'months');
             let eventDate = new Moment(payees[i].ref).add(diff, 'months');
-
+            if (eventDate.isBefore(startOfMonth)) {
+                eventDate.add(1, 'month');
+            }
 
             // Is the current payee/payment ref found in the payment list
             let isPaid = payments.filter((payment) => {
