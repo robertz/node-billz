@@ -36,7 +36,6 @@ exports.getIndex = async (req, res) => {
         let monthlyTotal = payees.reduce((acc, payee) => acc + payee.amount, 0);
         let amountPaid = 0;
 
-        // adjust the start of the week to the user offset.. 0 = Sunday 6 = Saturday
         let startOfMonth = new Moment(ref).startOf('month');
         let endOfMonth = new Moment(startOfMonth).endOf('month');
 
