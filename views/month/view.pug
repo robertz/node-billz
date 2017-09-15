@@ -18,16 +18,24 @@ block content
                         small(style='font-variant: small-caps;') Amount Remaining
                         h4 $#{formatCurrency(amountRemaining)}
                         small #{pctRemain.toLocaleString('en-US')}% of month
-            table.table.table-striped
+            table.table.table-bordered
                 thead
                     tr
                         th(width='20%') Date
                         th Name
                         th(width='10%') Mark Paid
                 for payee in payees
-                    tr
-                        td #{moment(payee.date).format('dddd, M/D/YYYY')}
-                        td #{payee.name}
+                    tr(style=(payee.currentWeek == true) ? 'background-color: rgba(0, 0, 255, .04);' : undefined)
+                        td 
+                            if (payee.isToday)
+                                strong #{moment(payee.date).format('dddd, M/D/YYYY')}
+                            else 
+                                | #{moment(payee.date).format('dddd, M/D/YYYY')}
+                        td 
+                            if (payee.isToday)
+                                strong #{payee.name}
+                            else 
+                                | #{payee.name}
                             if (payee.url)
                                 |    
                                 a(href=payee.url target='_blank') <i class="fa fa-external-link"></i>

@@ -33,6 +33,23 @@ exports.getIndex = async (req, res) => {
         let ref = new Moment();
         if (new Moment(req.query.dt).isValid()) ref = new Moment(req.query.dt);
 
+        
+
+        // Calculate the range for the current week
+        // adjust the start of the week to the user offset.. 0 = Sunday 6 = Saturday
+        let startOfWeek = new Moment(ref).startOf('week').subtract(7 - req.user.offset, 'days');
+        // Compensate for offset logic going too far back
+        if (ref.diff(startOfWeek, 'days') >= 7) {
+            startOfWeek.add(7, 'days');
+        }
+        let endOfWeek = new Moment(startOfWeek).add(6, 'days');
+        // ts and te is one day before and one day after so dates fall in between
+        let ts = new Moment(startOfWeek).subtract(1, 'day');
+        let te = new Moment(endOfWeek).add(1, 'day');
+
+        // End of week calcs
+
+
         let monthlyTotal = payees.reduce((acc, payee) => acc + payee.amount, 0);
         let amountPaid = 0;
 
@@ -61,21 +78,24 @@ exports.getIndex = async (req, res) => {
                 url: payees[i].url,
                 description: payees[i].description,
                 amount: payees[i].amount,
+                currentWeek: eventDate.isBetween(ts, te) ? true : false,
+                isToday: eventDate.startOf('day').isSame(new Moment().startOf('day')) ? true : false,
                 isPaid: false
             };
 
             // If the bill is paid, mark the payee and add the amount
             if (isPaid.length) {
                 payeeData.isPaid = true;
-                amountPaid += payeeData.amount;
+                amountPaid += isPaid[0].amount;
             }
 
             // Push the current payee info into the payee array
             monthData.push(payeeData);
         }
 
+        let amountRemaining = monthlyTotal ? monthlyTotal - amountPaid : 0;
+        // Avoid divide by 0 issues
         let pctPaid = monthlyTotal ? (amountPaid / monthlyTotal) * 100 : 0;
-        let amountRemaining = monthlyTotal ? (monthlyTotal - amountPaid) : 0;
         let pctRemain = monthlyTotal ? (amountRemaining / monthlyTotal) * 100 : 0;
 
         // Render it
