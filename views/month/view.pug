@@ -25,7 +25,7 @@ block content
                         th Name
                         th(width='10%') Mark Paid
                 for payee in data.payees
-                    tr(style=(payee.currentWeek == true) ? 'background-color: rgba(0, 0, 255, .12);' : undefined)
+                    tr(class=(payee.currentWeek == true) ? 'active' : undefined)
                         td 
                             if (payee.isToday)
                                 strong #{moment(payee.date).format('dddd, M/D/YYYY')}
