@@ -27,7 +27,23 @@ exports.getIndex = async (req, res) => {
         let payees = await getPayees();
         let payments = await getPayments();
 
-        let monthData = [];
+        // Stub out the payload for the page
+        let data = {
+            timing: {
+                startOfWeek: null,
+                endOfWeek: null,
+                startOfMonth: null,
+                endOfMonth: null
+            },
+            stats: {
+                monthlyTotal: payees.reduce((acc, payee) => acc + payee.amount, 0),
+                amountPaid: 0,
+                amountRemaining: 0,
+                pctPaid: 0,
+                pctRemain: 0
+            },
+            payees: []
+        };
 
         // if dt is passed in the url attempt to set the date
         let ref = new Moment();
@@ -37,31 +53,31 @@ exports.getIndex = async (req, res) => {
 
         // Calculate the range for the current week
         // adjust the start of the week to the user offset.. 0 = Sunday 6 = Saturday
-        let startOfWeek = new Moment(ref).startOf('week').subtract(7 - req.user.offset, 'days');
+        data.timing.startOfWeek = new Moment(ref).startOf('week').subtract(7 - req.user.offset, 'days');
         // Compensate for offset logic going too far back
-        if (ref.diff(startOfWeek, 'days') >= 7) {
-            startOfWeek.add(7, 'days');
+        if (ref.diff(data.timing.startOfWeek, 'days') >= 7) {
+            data.timing.startOfWeek.add(7, 'days');
         }
-        let endOfWeek = new Moment(startOfWeek).add(6, 'days');
+        data.timing.endOfWeek = new Moment(data.timing.startOfWeek).add(6, 'days');
         // ts and te is one day before and one day after so dates fall in between
-        let ts = new Moment(startOfWeek).subtract(1, 'day');
-        let te = new Moment(endOfWeek).add(1, 'day');
+        let ts = new Moment(data.timing.startOfWeek).subtract(1, 'day');
+        let te = new Moment(data.timing.endOfWeek).add(1, 'day');
 
         // End of week calcs
 
 
-        let monthlyTotal = payees.reduce((acc, payee) => acc + payee.amount, 0);
-        let amountPaid = 0;
+        // let monthlyTotal = payees.reduce((acc, payee) => acc + payee.amount, 0);
+        // let amountPaid = 0;
 
-        let startOfMonth = new Moment(ref).startOf('month');
-        let endOfMonth = new Moment(startOfMonth).endOf('month');
+        data.timing.startOfMonth = new Moment(ref).startOf('month');
+        data.timing.endOfMonth = new Moment(data.timing.startOfMonth).endOf('month');
 
         for (let i = 0; i < payees.length; i++) {
 
             // How many months to add to bring the reference date to the current month
             let diff = new Moment(ref).diff(payees[i].ref, 'months');
             let eventDate = new Moment(payees[i].ref).add(diff, 'months');
-            if (eventDate.isBefore(startOfMonth)) {
+            if (eventDate.isBefore(data.timing.startOfMonth)) {
                 eventDate.add(1, 'month');
             }
 
@@ -86,29 +102,22 @@ exports.getIndex = async (req, res) => {
             // If the bill is paid, mark the payee and add the amount
             if (isPaid.length) {
                 payeeData.isPaid = true;
-                amountPaid += isPaid[0].amount;
+                data.stats.amountPaid += isPaid.reduce((acc, payment) => acc + payment.amount, 0);
             }
 
             // Push the current payee info into the payee array
-            monthData.push(payeeData);
+            data.payees.push(payeeData);
         }
 
-        let amountRemaining = monthlyTotal ? monthlyTotal - amountPaid : 0;
+        data.stats.amountRemaining = data.stats.monthlyTotal ? data.stats.monthlyTotal - data.stats.amountPaid : 0;
         // Avoid divide by 0 issues
-        let pctPaid = monthlyTotal ? (amountPaid / monthlyTotal) * 100 : 0;
-        let pctRemain = monthlyTotal ? (amountRemaining / monthlyTotal) * 100 : 0;
+        data.stats.pctPaid = data.stats.monthlyTotal ? (data.stats.amountPaid / data.stats.monthlyTotal) * 100 : 0;
+        data.stats.pctRemain = data.stats.monthlyTotal ? (data.stats.amountRemaining / data.stats.monthlyTotal) * 100 : 0;
 
         // Render it
         res.render('month/view', {
             title: 'Month',
-            startOfMonth: startOfMonth,
-            endOfMonth: endOfMonth,
-            monthlyTotal: monthlyTotal,
-            amountPaid: amountPaid,
-            pctPaid: pctPaid,
-            amountRemaining: amountRemaining,
-            pctRemain: pctRemain,
-            payees: monthData
+            data: data
         });
     }
     catch (err) {

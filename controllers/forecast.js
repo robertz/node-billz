@@ -90,7 +90,7 @@ exports.getIndex = async (req, res) => {
                     // If the bill is paid, mark the payee and add the amount
                     if (isPaid.length) {
                         payeeData.isPaid = true;
-                        weeklyTemplate.amountPaid += isPaid[0].amount;
+                        weeklyTemplate.amountPaid += isPaid.reduce((acc, payment) => acc + payment.amount, 0);
                     }
 
                     // Push the current payee info into the payee array
