@@ -108,8 +108,8 @@ exports.getIndex = async (req, res) => {
             }
 
             // Dates do not always sort correctly. Fix fix the issue
-            weeklyTemplate.payees = _.sortBy(weeklyTemplate.payees, (o) => {
-                return new Moment(o.date);
+            weeklyTemplate.payees = _.sortBy(weeklyTemplate.payees, (payee) => {
+                return new Moment(payee.date);
             });
 
             // Push the current week info into the weekly array used by the forecast template
