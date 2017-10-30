@@ -107,6 +107,12 @@ exports.getIndex = async (req, res) => {
         data.stats.pctPaid = data.stats.monthlyTotal ? (data.stats.amountPaid / data.stats.monthlyTotal) * 100 : 0;
         data.stats.pctRemain = data.stats.monthlyTotal ? (data.stats.amountRemaining / data.stats.monthlyTotal) * 100 : 0;
 
+        // If amount remaining goes negative (paid over the monthly calculation) 
+        if (data.stats.amountRemaining < 0) {
+            data.stats.amountRemaining = 0;
+            data.stats.pctRemain = 0;
+        }
+
         // Render it
         res.render('month/view', {
             title: 'Month',
