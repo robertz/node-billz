@@ -187,8 +187,9 @@ exports.getDelete = (req, res) => {
     if (req.params.id) {
 
         // Delete the payee
-        Payee.remove({ owner: req.user.id, id: req.params.id }, (err) => {
-            if (err) { return next(err); }
+
+        Payee.remove({ owner: req.user.id, _id: req.params.id }, (err) => {
+            if (err) { return next(err);}
 
             // and all associated payments
             Payments.remove({ owner: req.user.id, payee: req.params.id }, (err) => {
