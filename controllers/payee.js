@@ -4,6 +4,7 @@ const Payee = require('../models/Payee');
 const Payments = require('../models/Payment');
 const Moment = require('moment-timezone');
 
+// GET default payee handler
 exports.getIndex = async (req, res) => {
 
     const getPayees = () => {
@@ -31,6 +32,7 @@ exports.getIndex = async (req, res) => {
 
 };
 
+// GET the payee specified by the id URL parameter
 exports.getView = async (req, res) => {
 
     const getPayee = () => {
@@ -72,6 +74,7 @@ exports.getView = async (req, res) => {
 
 };
 
+// GET the edit payee view specified by the id URL parameter
 exports.getEdit = (req, res) => {
     if (req.params.id) {
         Payee
@@ -84,12 +87,14 @@ exports.getEdit = (req, res) => {
     }
 };
 
+// GET a new payee with values daulted
 exports.getCreate = (req, res) => {
     res.render('payees/create', {
         title: 'Create Payee'
     });
 };
 
+// POST insert the payee and sanitize input
 exports.postCreate = (req, res) => {
     req.assert('name', 'You must enter a name for this payee').len(1);
     req.sanitize('name');
@@ -125,6 +130,7 @@ exports.postCreate = (req, res) => {
 
 };
 
+// POST update the payee to the backend and sanitize the input
 exports.postSave = async (req, res) => {
     req.assert('name', 'You must enter a name for this payee').len(1);
     req.sanitize('name');
@@ -167,6 +173,7 @@ exports.postSave = async (req, res) => {
 
 };
 
+// POST insert a payment for payee specified by the id URL parameter
 exports.postPay = (req, res) => {
     let payment = new Payments();
 
@@ -183,6 +190,7 @@ exports.postPay = (req, res) => {
     });
 };
 
+// GET delete the payee specified by the id URL parameter
 exports.getDelete = (req, res) => {
     if (req.params.id) {
 
