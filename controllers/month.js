@@ -49,8 +49,6 @@ exports.getIndex = async (req, res) => {
         let ref = new Moment();
         if (new Moment(req.query.dt).isValid()) ref = new Moment(req.query.dt);
 
-        
-
         // Calculate the range for the current week
         // adjust the start of the week to the user offset.. 0 = Sunday 6 = Saturday
         data.timing.startOfWeek = new Moment(ref).startOf('week').subtract(7 - req.user.offset, 'days');
@@ -62,12 +60,7 @@ exports.getIndex = async (req, res) => {
         // ts and te is one day before and one day after so dates fall in between
         let ts = new Moment(data.timing.startOfWeek).subtract(1, 'day');
         let te = new Moment(data.timing.endOfWeek).add(1, 'day');
-
         // End of week calcs
-
-
-        // let monthlyTotal = payees.reduce((acc, payee) => acc + payee.amount, 0);
-        // let amountPaid = 0;
 
         data.timing.startOfMonth = new Moment(ref).startOf('month');
         data.timing.endOfMonth = new Moment(data.timing.startOfMonth).endOf('month');
@@ -113,6 +106,12 @@ exports.getIndex = async (req, res) => {
         // Avoid divide by 0 issues
         data.stats.pctPaid = data.stats.monthlyTotal ? (data.stats.amountPaid / data.stats.monthlyTotal) * 100 : 0;
         data.stats.pctRemain = data.stats.monthlyTotal ? (data.stats.amountRemaining / data.stats.monthlyTotal) * 100 : 0;
+
+        // If amount remaining goes negative (paid over the monthly calculation) 
+        if (data.stats.amountRemaining < 0) {
+            data.stats.amountRemaining = 0;
+            data.stats.pctRemain = 0;
+        }
 
         // Render it
         res.render('month/view', {

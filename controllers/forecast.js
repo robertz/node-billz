@@ -3,7 +3,7 @@
 const Payee = require('../models/Payee');
 const Payment = require('../models/Payment');
 const Moment = require('moment-timezone');
-
+const _ = require('lodash');
 
 exports.getIndex = async (req, res) => {
 
@@ -97,6 +97,7 @@ exports.getIndex = async (req, res) => {
                     weeklyTemplate.payees.push(payeeData);
                     weeklyTemplate.amountDue += payees[i].amount;
                 }
+
             }
 
             // Handle summing things up for the current week
@@ -105,6 +106,11 @@ exports.getIndex = async (req, res) => {
             if (weeklyTemplate.amountDue) {
                 weeklyTemplate.percentWeek = (weeklyTemplate.amountPaid / weeklyTemplate.amountDue) * 100;
             }
+
+            // Dates do not always sort correctly. Fix fix the issue
+            weeklyTemplate.payees = _.sortBy(weeklyTemplate.payees, (payee) => {
+                return new Moment(payee.date);
+            });
 
             // Push the current week info into the weekly array used by the forecast template
             weekly.push(weeklyTemplate);
