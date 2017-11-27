@@ -114,7 +114,7 @@ exports.getIndex = async (req, res) => {
         }
 
         // Render it
-        res.render('month/view', {
+        res.render('month/index', {
             title: 'Month',
             data: data
         });

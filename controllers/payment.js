@@ -72,7 +72,7 @@ exports.getView = async (req, res) => {
         }
 
         // Render it
-        res.render('payments/view', {
+        res.render('payments/index', {
             title: 'Payments',
             data: data
         });

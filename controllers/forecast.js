@@ -123,7 +123,7 @@ exports.getIndex = async (req, res) => {
         }
 
         // Render it
-        res.render('forecast/weekly', {
+        res.render('forecast/index', {
             title: 'Forecast',
             monthlyTotal: monthlyTotal,
             weeks: weekly

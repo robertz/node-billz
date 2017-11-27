@@ -18,7 +18,7 @@ exports.getIndex = async (req, res) => {
     try {
         let payees = await getPayees();
 
-        res.render('payees/list', {
+        res.render('payees/index', {
             title: 'Payees',
             payees: payees,
             total: payees.reduce((acc, payee) => acc + payee.amount, 0),
