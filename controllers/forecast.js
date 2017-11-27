@@ -52,9 +52,11 @@ exports.getIndex = async (req, res) => {
                 end: endOfWeek,
                 amountDue: 0,
                 amountPaid: 0,
+                amountRemain: 0,
                 count: 0,
                 percentMonth: 0,
                 percentWeek: 0,
+                percentRemain: 0,
                 payees: []
             };
 
@@ -107,6 +109,9 @@ exports.getIndex = async (req, res) => {
                 weeklyTemplate.percentWeek = (weeklyTemplate.amountPaid / weeklyTemplate.amountDue) * 100;
             }
 
+            weeklyTemplate.amountRemain = weeklyTemplate.amountDue - weeklyTemplate.amountPaid;
+            weeklyTemplate.percentRemain = (weeklyTemplate.amountRemain / weeklyTemplate.amountDue) * 100;
+            
             // Dates do not always sort correctly. Fix fix the issue
             weeklyTemplate.payees = _.sortBy(weeklyTemplate.payees, (payee) => {
                 return new Moment(payee.date);

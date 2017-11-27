@@ -25,7 +25,7 @@ block content
                                     input(type='hidden' name='_csrf' value=_csrf)
                                     input.form-control(type='date' name='ref' value=payDate) 
                                     | 
-                                    input.form-control(type='text' name='amount')
+                                    input.form-control(type='text' name='amount' value=formatCurrency(payee.amount))
                                     | 
                                     input.btn.btn-primary(type='submit' value='Submit')
             .row

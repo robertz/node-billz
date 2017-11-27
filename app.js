@@ -170,6 +170,7 @@ app.get('/month', passportConfig.isAuthenticated, monthController.getIndex);
 
 // payment related routes
 app.get('/payment', passportConfig.isAuthenticated, paymentController.getView);
+app.get('/payment/page/:page', passportConfig.isAuthenticated, paymentController.getView);
 /**
  * OAuth authentication routes. (Sign in)
  */

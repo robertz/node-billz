@@ -8,14 +8,18 @@ block content
                     | #{moment(week.start).format('dddd, M/D/YYYY')} - #{moment(week.end).format('dddd, M/D/YYYY')}
                 .panel-body
                     .row
-                        .col-xs-6
+                        .col-xs-4
                             small(style='font-variant: small-caps;') Amount Due
                             h4 $#{formatCurrency(week.amountDue)}
                             small #{week.percentMonth.toLocaleString('en-US')}% of month
-                        .col-xs-6
+                        .col-xs-4
                             small(style='font-variant: small-caps;') Amount Paid
                             h4 $#{formatCurrency(week.amountPaid)}
                             small #{week.percentWeek.toLocaleString('en-US')}% of week
+                        .col-xs-4
+                            small(style='font-variant: small-caps;') Amount Remaining
+                            h4 $#{formatCurrency(week.amountRemain)}
+                            small #{week.percentRemain.toLocaleString('en-US')}% of week
                 table.table.table-striped
                     thead
                         tr
