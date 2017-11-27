@@ -15,29 +15,30 @@ exports.getView = async (req, res) => {
     };
 
     const getPayments = () => {
+        let page = req.params.page || 1;
+        let offset = (page - 1) * per_page;
         return Payment.find({ owner: req.user.id })
             .sort({ ref: -1 })
+            .skip(offset)
+            .limit(per_page)
             .then((payments) => {
                 return payments;
             });
     };
 
-    const paginate = (items, page) => {
-        var page = page || 1;
-        let offset = (page - 1) * per_page;
-        let paginatedItems = items.slice(offset, offset + per_page);
-        
-        return paginatedItems;
+    const getTotalPayments = () => {
+        return Payment.count({ owner: req.user.id });
     };
 
     try{
         let payees = await getPayees();
         let payments = await getPayments();
+        let totalPayments = await getTotalPayments();
 
         // Stub out the page payload
         let data = {
             currentPage: req.params.page || 1,
-            totalPages: Math.ceil(payments.length / per_page),
+            totalPages: Math.ceil(totalPayments / per_page),
             previousPage: 1,
             nextPage: 1,
             pageSpread: [],
@@ -53,10 +54,7 @@ exports.getView = async (req, res) => {
             }
         }
 
-
-        let pageData = paginate(payments, data.currentPage);
-
-        for (let payment of pageData) {
+        for (let payment of payments) {
 
             // Get some information about the payee.. Should always exist
             let payeeName = payees.filter((payee) => {
