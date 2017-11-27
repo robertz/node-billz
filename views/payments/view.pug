@@ -18,3 +18,12 @@ block content
                     td #{moment(payment.ref).format('MMMM Do YYYY')}
                     td #{moment(payment.createdAt).format('MMMM Do YYYY, h:mm:ss a')}
                     td #{formatCurrency(payment.amount, {format: '%s%v', code: 'USD', symbol: '$'})}
+        nav
+            ul.pagination
+                li.page-item
+                    a.page-link(href='/payment/page/' + data.previousPage) Prev
+                for spreadItem in data.pageSpread
+                    li(class=(spreadItem == data.currentPage) ? 'page-item active' : 'page-item')
+                        a.page-link(href = '/payment/page/' + spreadItem) #{spreadItem}
+                li.page-item
+                    a.page-link(href='/payment/page/' + data.nextPage) Next
