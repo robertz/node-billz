@@ -21,16 +21,16 @@ block content
                 datasets: [
                     {
                         label: 'Actual per Day',
-                        fill: false,
+                        fill: true,
                         data: #{JSON.stringify(data.amounts)},
-                        backgroundColor: ["rgba(0,255,0,0.1)"],
+                        backgroundColor: window.chartColors.red,
                         borderColor: window.chartColors.red
                     },
                     {
                         label: 'Calculated per Day',
-                        fill: false,
+                        fill: true,
                         data: #{JSON.stringify(data.calculated)},
-                        backgroundColor: ["rgba(0,0,255,0.1)"],
+                        backgroundColor: window.chartColors.blue,
                         borderColor: window.chartColors.blue
                     }
                 ]
