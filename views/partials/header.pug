@@ -28,6 +28,10 @@
             a(href='/forecast') Forecast
           li(class=(title == 'Month') ? 'active' : undefined)
             a(href='/month') Month
+
+          li(class=(title == 'Map') ? 'active' : undefined)
+            a(href='/map') Map
+
           li.dropdown(class=(title == 'Account Management') ? 'active' : undefined)
             a.dropdown-toggle(href='#', data-toggle='dropdown')
               if user.profile.picture
