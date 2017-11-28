@@ -40,7 +40,7 @@ block content
                                 |    
                                 a(href=payee.url target='_blank') <i class="fa fa-external-link"></i>
                             br
-                            | #{payee.description}
+                            small #{payee.description}
                         td 
                             if payee.isPaid == false
                                 a.btn.btn-warning(style='width: 100%' href='/payee/view/' + payee.id + '?dt=' + moment(payee.date).format('YYYY-MM-DD')) #{formatCurrency(payee.amount, {format: '%s%v', code: 'USD', symbol: '$'})}
