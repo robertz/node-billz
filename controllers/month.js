@@ -42,6 +42,11 @@ exports.getIndex = async (req, res) => {
                 pctPaid: 0,
                 pctRemain: 0
             },
+            graph: {
+                labels: [],
+                actual: [],
+                calculated: []
+            },
             payees: []
         };
 
@@ -64,6 +69,22 @@ exports.getIndex = async (req, res) => {
 
         data.timing.startOfMonth = new Moment(ref).startOf('month');
         data.timing.endOfMonth = new Moment(data.timing.startOfMonth).endOf('month');
+
+        // Build graph data
+        let monthlyPayments = payments.filter((payment) => {
+            return payment.ref.indexOf(new Moment(ref).format("YYYY-MM")) === 0 ? true : false;
+        });
+        // Default graph values for the month
+        for (let i = 0; i < data.timing.startOfMonth.daysInMonth(); i++) {
+            data.graph.labels[i] = i + 1;
+            data.graph.actual[i] = 0;
+            data.graph.calculated[i] = 0;
+        }
+        // Build actual daily expenditure amounts for graph
+        for (let payment of monthlyPayments) {
+            let ndx = new Moment(payment.ref).format("D") - 1;
+            data.graph.actual[ndx] += payment.amount;
+        }
 
         for (let i = 0; i < payees.length; i++) {
 
@@ -97,6 +118,9 @@ exports.getIndex = async (req, res) => {
                 payeeData.isPaid = true;
                 data.stats.amountPaid += isPaid.reduce((acc, payment) => acc + payment.amount, 0);
             }
+
+            // Build calculated daily expenditure amounts graph data
+            data.graph.calculated[eventDate.format("D") - 1] += payees[i].amount;
 
             // Push the current payee info into the payee array
             data.payees.push(payeeData);

@@ -39,6 +39,7 @@ const payeeController = require('./controllers/payee');
 const forecastController = require('./controllers/forecast');
 const paymentController = require('./controllers/payment');
 const monthController = require('./controllers/month');
+const mapController = require('./controllers/map');
 
 /**
  * API keys and Passport configuration.
@@ -167,6 +168,9 @@ app.get('/forecast', passportConfig.isAuthenticated, forecastController.getIndex
 
 // month related routes
 app.get('/month', passportConfig.isAuthenticated, monthController.getIndex);
+
+// map related routes
+app.get('/map', passportConfig.isAuthenticated, mapController.getIndex);
 
 // payment related routes
 app.get('/payment', passportConfig.isAuthenticated, paymentController.getView);
