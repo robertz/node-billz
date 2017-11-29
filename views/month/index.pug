@@ -18,7 +18,7 @@ block content
                         small(style='font-variant: small-caps;') Amount Remaining
                         h4 $#{formatCurrency(data.stats.amountRemaining)}
                         small #{data.stats.pctRemain.toLocaleString('en-US')}% of month
-                .row.hidden-xs
+                .row.hidden-xs.hidden-sm
                     .col-xs-12
                         canvas(id='myChart' height='40px' width='400px')
             table.table
