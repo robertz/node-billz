@@ -80,12 +80,11 @@ exports.getIndex = async (req, res) => {
             data.graph.actual[i] = 0;
             data.graph.calculated[i] = 0;
         }
-        // Build actual amounts for graph
+        // Build actual daily expenditure amounts for graph
         for (let payment of monthlyPayments) {
             let ndx = new Moment(payment.ref).format("D") - 1;
             data.graph.actual[ndx] += payment.amount;
         }
-
 
         for (let i = 0; i < payees.length; i++) {
 
@@ -120,7 +119,7 @@ exports.getIndex = async (req, res) => {
                 data.stats.amountPaid += isPaid.reduce((acc, payment) => acc + payment.amount, 0);
             }
 
-            // Build calculated graph data
+            // Build calculated daily expenditure amounts graph data
             data.graph.calculated[eventDate.format("D") - 1] += payees[i].amount;
 
             // Push the current payee info into the payee array
