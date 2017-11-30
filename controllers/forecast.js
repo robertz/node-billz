@@ -57,47 +57,58 @@ exports.getIndex = async (req, res) => {
                 percentMonth: 0, 
                 percentWeek: 0, 
                 percentRemain: 0, 
-                payees: [] 
+                payees: [],
+                dailyGraph: otr === 0 ? true : false,
+                dailyCalculated: [0, 0, 0, 0, 0, 0, 0],
+                dailyActual: [0, 0, 0, 0, 0, 0, 0],
+                dailyOrder: []
             };
+
+            for( let d = 0; d < 7; d++) {
+                weeklyTemplate.dailyOrder.push( new Moment(startOfWeek).add(d, "days").format('D') );
+            }
 
             for (let i = 0; i < payees.length; i++) {
                 // How many months to add to bring the reference date to the current month
                 let diff = new Moment(ref).diff(payees[i].ref, "months");
                 let eventDate = new Moment(payees[i].ref).add(diff, "months");
                 if (eventDate.isBefore(startOfWeek)) {
-                eventDate.add(1, "month");
+                 eventDate.add(1, "month");
                 }
                 // ts and te is one day before and one day after so dates fall in between
                 let ts = new Moment(startOfWeek).subtract(1, "day");
                 let te = new Moment(endOfWeek).add(1, "day");
                 if (eventDate.isBetween(ts, te)) {
-                // Is the current payee/payment ref found in the payment list
-                let isPaid = payments.filter(
-                    payment => {
-                    return (payment.payee == payees[i].id && payment.ref == eventDate.format("YYYY-MM-DD"));
+                    // Is the current payee/payment ref found in the payment list
+                    let isPaid = payments.filter((payment) => {
+                        return (payment.payee == payees[i].id && payment.ref == eventDate.format("YYYY-MM-DD"));
                     }
-                );
+                    );
 
-                // Stub out the payment information for the page
-                let payeeData = { 
-                    id: payees[i].id, 
-                    date: eventDate, 
-                    name: payees[i].name, 
-                    url: payees[i].url, 
-                    description: payees[i].description, 
-                    amount: payees[i].amount, 
-                    isPaid: false 
-                };
+                    // Stub out the payment information for the page
+                    let payeeData = { 
+                        id: payees[i].id, 
+                        date: eventDate, 
+                        name: payees[i].name, 
+                        url: payees[i].url, 
+                        description: payees[i].description, 
+                        amount: payees[i].amount, 
+                        isPaid: false 
+                    };
 
-                // If the bill is paid, mark the payee and add the amount
-                if (isPaid.length) {
-                    payeeData.isPaid = true;
-                    weeklyTemplate.amountPaid += isPaid.reduce((acc, payment) => acc + payment.amount, 0);
-                }
+                    weeklyTemplate.dailyCalculated[eventDate.day()] += payees[i].amount.toFixed(2) * 1;
 
-                // Push the current payee info into the payee array
-                weeklyTemplate.payees.push(payeeData);
-                weeklyTemplate.amountDue += payees[i].amount;
+                    // If the bill is paid, mark the payee and add the amount
+                    if (isPaid.length) {
+                        payeeData.isPaid = true;
+                        let payeeAmount = isPaid.reduce((acc, payment) => acc + payment.amount, 0).toFixed(2);
+                        weeklyTemplate.amountPaid += payeeAmount;
+                        weeklyTemplate.dailyActual[eventDate.day()] += payeeAmount * 1;
+                    }
+
+                    // Push the current payee info into the payee array
+                    weeklyTemplate.payees.push(payeeData);
+                    weeklyTemplate.amountDue += payees[i].amount;
                 }
             }
 
@@ -118,14 +129,7 @@ exports.getIndex = async (req, res) => {
             }
             
             // Dates do not always sort correctly. Fix fix the issue
-            weeklyTemplate.payees = _.sortBy(
-                weeklyTemplate.payees,
-                payee => {
-                return new Moment(
-                    payee.date
-                );
-                }
-            );
+            weeklyTemplate.payees = _.sortBy(weeklyTemplate.payees, (payee) => {return new Moment(payee.date);});
 
             // Push the current week info into the weekly array used by the forecast template
             weekly.push(weeklyTemplate);
