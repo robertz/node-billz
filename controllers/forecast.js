@@ -65,7 +65,7 @@ exports.getIndex = async (req, res) => {
             };
 
             for( let d = 0; d < 7; d++) {
-                weeklyTemplate.dailyOrder.push( new Moment(startOfWeek).add(d, "days").format('D') );
+                weeklyTemplate.dailyOrder[d] =  new Moment(startOfWeek).add(d, "days").format('D');
             }
 
             for (let i = 0; i < payees.length; i++) {
@@ -101,7 +101,7 @@ exports.getIndex = async (req, res) => {
                     // If the bill is paid, mark the payee and add the amount
                     if (isPaid.length) {
                         payeeData.isPaid = true;
-                        let payeeAmount = isPaid.reduce((acc, payment) => acc + payment.amount, 0).toFixed(2);
+                        let payeeAmount = isPaid.reduce((acc, payment) => acc + payment.amount, 0).toFixed(2) * 1;
                         weeklyTemplate.amountPaid += payeeAmount;
                         weeklyTemplate.dailyActual[eventDate.day()] += payeeAmount * 1;
                     }
@@ -130,6 +130,8 @@ exports.getIndex = async (req, res) => {
             
             // Dates do not always sort correctly. Fix fix the issue
             weeklyTemplate.payees = _.sortBy(weeklyTemplate.payees, (payee) => {return new Moment(payee.date);});
+
+            if (otr === 0) console.dir(weeklyTemplate);
 
             // Push the current week info into the weekly array used by the forecast template
             weekly.push(weeklyTemplate);
