@@ -39,19 +39,7 @@ exports.getIndex = async (req, res) => {
             if (otr) ref.add(1, "week");
 
             // adjust the start of the week to the user offset.. 0 = Sunday 6 = Saturday
-            let startOfWeek = new Moment(
-                ref
-            )
-                .startOf(
-                "week"
-                )
-                .subtract(
-                7 -
-                    req
-                    .user
-                    .offset,
-                "days"
-                );
+            let startOfWeek = new Moment(ref).startOf("week").subtract(7 - req.user.offset, "days");
             // Compensate for offset logic going too far back
             if (ref.diff(startOfWeek, "days") >= 7) {
                 startOfWeek.add(7, "days");
@@ -59,7 +47,18 @@ exports.getIndex = async (req, res) => {
             let endOfWeek = new Moment(startOfWeek).add(6, "days");
 
             // The data structure for one week of bills
-            let weeklyTemplate = { start: startOfWeek, end: endOfWeek, amountDue: 0, amountPaid: 0, amountRemain: 0, count: 0, percentMonth: 0, percentWeek: 0, percentRemain: 0, payees: [] };
+            let weeklyTemplate = { 
+                start: startOfWeek, 
+                end: endOfWeek, 
+                amountDue: 0, 
+                amountPaid: 0, 
+                amountRemain: 0, 
+                count: 0, 
+                percentMonth: 0, 
+                percentWeek: 0, 
+                percentRemain: 0, 
+                payees: [] 
+            };
 
             for (let i = 0; i < payees.length; i++) {
                 // How many months to add to bring the reference date to the current month
@@ -75,22 +74,20 @@ exports.getIndex = async (req, res) => {
                 // Is the current payee/payment ref found in the payment list
                 let isPaid = payments.filter(
                     payment => {
-                    return (
-                        payment.payee ==
-                        payees[
-                            i
-                        ]
-                            .id &&
-                        payment.ref ==
-                        eventDate.format(
-                            "YYYY-MM-DD"
-                        )
-                    );
+                    return (payment.payee == payees[i].id && payment.ref == eventDate.format("YYYY-MM-DD"));
                     }
                 );
 
                 // Stub out the payment information for the page
-                let payeeData = { id: payees[i].id, date: eventDate, name: payees[i].name, url: payees[i].url, description: payees[i].description, amount: payees[i].amount, isPaid: false };
+                let payeeData = { 
+                    id: payees[i].id, 
+                    date: eventDate, 
+                    name: payees[i].name, 
+                    url: payees[i].url, 
+                    description: payees[i].description, 
+                    amount: payees[i].amount, 
+                    isPaid: false 
+                };
 
                 // If the bill is paid, mark the payee and add the amount
                 if (isPaid.length) {
