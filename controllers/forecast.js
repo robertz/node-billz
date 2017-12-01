@@ -82,8 +82,7 @@ exports.getIndex = async (req, res) => {
                     // Is the current payee/payment ref found in the payment list
                     let isPaid = payments.filter((payment) => {
                         return (payment.payee == payees[i].id && payment.ref == eventDate.format("YYYY-MM-DD"));
-                    }
-                    );
+                    });
 
                     // Stub out the payment information for the page
                     let payeeData = { 
@@ -104,7 +103,7 @@ exports.getIndex = async (req, res) => {
                         payeeData.isPaid = true;
                         let payeeAmount = isPaid.reduce((acc, payment) => acc + payment.amount, 0).toFixed(2) * 1;
                         weeklyTemplate.amountPaid += payeeAmount;
-                        // Calculate the daily actual vallues
+                        // Calculate the daily actual values
                         weeklyTemplate.dailyActual[ weeklyTemplate.dailyOrder.indexOf(eventDate.format('D')) ] += payeeAmount * 1;
                     }
 

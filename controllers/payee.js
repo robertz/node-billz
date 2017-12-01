@@ -3,6 +3,7 @@
 const Payee = require('../models/Payee');
 const Payments = require('../models/Payment');
 const Moment = require('moment-timezone');
+const _ = require('lodash');
 
 // GET default payee handler
 exports.getIndex = async (req, res) => {
@@ -54,17 +55,33 @@ exports.getView = async (req, res) => {
         let payee = await getPayee();
         let payments = await getPayments();
 
-        let avgPayment = payee.amount;
+        let data = {
+            payee: payee,
+            avgPayment: 0,
+            payments: payments,
+            graph: {
+                labels: [],
+                amounts: []
+            }
+        };
+
+        data.avgPayment = payee.amount;
+
         if (payments.length) {
-            avgPayment = payments.reduce((acc, payment) => acc + payment.amount, 0) / payments.length;
+            // duplicate the payment array
+            let histSort = payments.slice();
+            for (let payment of histSort.reverse()) {
+                data.graph.labels.push( new Moment(payment.ref).format('M') );
+                data.graph.amounts.push( payment.amount );
+            }
+            data.avgPayment = payments.reduce((acc, payment) => acc + payment.amount, 0) / payments.length;
         }
+
+        console.dir(data.graph);
 
         res.render('payees/view', {
             title: 'View Payee',
-            payee: payee,
-            payDate: req.query.dt || '',
-            avgPayment: avgPayment,
-            payments: payments
+            data: data
         });
     }
     catch (err) {

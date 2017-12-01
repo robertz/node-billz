@@ -3,43 +3,50 @@ extends ../layout
 block content
     .panel.panel-primary
         .panel-heading
-            h5= payee.name
+            h5= data.payee.name
         .panel-body
             .row
                 .col-xs-12.col-md-6
                     .row
                         .col-xs-4
                             small(style='font-variant: small-caps;') Due Date
-                            h4 #{moment(payee.ref).format('Do')}
+                            h4 #{moment(data.payee.ref).format('Do')}
                         .col-xs-4
                             small(style='font-variant: small-caps;') Amount
-                            h4 #{formatCurrency(payee.amount, {format: '%s%v', code: 'USD', symbol: '$'})}
+                            h4 #{formatCurrency(data.payee.amount, {format: '%s%v', code: 'USD', symbol: '$'})}
                         .col-xs-4
                             small(style='font-variant: small-caps;') Average
-                            h4 #{formatCurrency(avgPayment, {format: '%s%v', code: 'USD', symbol: '$'})}
+                            h4 #{formatCurrency(data.avgPayment, {format: '%s%v', code: 'USD', symbol: '$'})}
                 .col-xs-12.col-md-6
                     .row
                         .col-xs-12
                             .well
-                                form.form-inline(method='post' action='/payee/pay/' + payee.id)
+                                form.form-inline(method='post' action='/payee/pay/' + data.payee.id)
                                     input(type='hidden' name='_csrf' value=_csrf)
-                                    input.form-control(type='date' name='ref' value=payDate) 
+                                    input.form-control(type='date' name='ref' value=data.payDate) 
                                     | 
-                                    input.form-control(type='text' name='amount' value=formatCurrency(payee.amount))
+                                    input.form-control(type='text' name='amount' value=formatCurrency(data.payee.amount))
                                     | 
                                     input.btn.btn-primary(type='submit' value='Submit')
             .row
                 .col-xs-12
                     h6 Description:
-                    p #{payee.description}
+                    p #{data.payee.description}
             .row 
                 .col-xs-12
                     a(class='btn btn-primary' href='/payee') Payees 
                     | 
                     a(class='btn btn-warning' href='/forecast') Forecast 
                     | 
-                    a(class='btn btn-success' href='/payee/edit/' + payee.id) Edit
-    if (payments.length)
+                    a(class='btn btn-success' href='/payee/edit/' + data.payee.id) Edit
+    if (data.payments.length)
+        if data.payments.length > 2
+            .panel.panel-primary.hidden-xs
+                .panel-heading
+                    h5 History at a Glance
+                .panel-body
+                    .col-xs-12
+                        canvas(id='myChart' height='50px')
         .panel.panel-primary
             .panel-heading
                 h5 Payment History
@@ -50,9 +57,44 @@ block content
                         th Due Date
                         th Paid Date
                         th Amount
-                for payment in payments
+                for payment in data.payments
                     tr
-                        td #{payee.name}
+                        td #{data.payee.name}
                         td #{moment(payment.ref).format('M/D/YYYY')}
                         td #{moment(payment.createdAt).format('MMMM Do YYYY, h:mm:ss a')}
                         td #{formatCurrency(payment.amount, {format: '%s%v', code: 'USD', symbol: '$'})}
+    script.
+        window.chartColors = {
+            red: 'rgb(255, 99, 132)',
+            orange: 'rgb(255, 159, 64)',
+            yellow: 'rgb(255, 205, 86)',
+            green: 'rgb(75, 192, 192)',
+            blue: 'rgb(54, 162, 235)',
+            purple: 'rgb(153, 102, 255)',
+            grey: 'rgb(201, 203, 207)'
+        };
+        var ctx = document.getElementById("myChart").getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [#{data.graph.labels}],
+                datasets: [
+                    {
+                        label: 'Payment History',
+                        fill: true,
+                        data: #{JSON.stringify(data.graph.amounts)},
+                        backgroundColor: "rgba(75, 192, 192, 0.5)",
+                        borderColor: window.chartColors.grenn
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
