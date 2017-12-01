@@ -58,6 +58,7 @@ exports.getView = async (req, res) => {
         let data = {
             payee: payee,
             avgPayment: 0,
+            payDate: req.query.dt || '',
             payments: payments,
             graph: {
                 labels: [],
