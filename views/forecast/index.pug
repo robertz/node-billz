@@ -8,18 +8,22 @@ block content
                     | #{moment(week.start).format('dddd, M/D/YYYY')} - #{moment(week.end).format('dddd, M/D/YYYY')}
                 .panel-body
                     .row
-                        .col-xs-4
+                        .col-xs-6.col-sm-4
                             small(style='font-variant: small-caps;') Amount Due
                             h4 $#{formatCurrency(week.amountDue)}
                             small #{week.percentMonth.toLocaleString('en-US')}% of month
-                        .col-xs-4
+                        .col-xs-6.col-sm-4
                             small(style='font-variant: small-caps;') Amount Paid
                             h4 $#{formatCurrency(week.amountPaid)}
                             small #{week.percentWeek.toLocaleString('en-US')}% of week
-                        .col-xs-4
+                        .col-xs-6.col-sm-4
                             small(style='font-variant: small-caps;') Amount Remaining
                             h4 $#{formatCurrency(week.amountRemain)}
                             small #{week.percentRemain.toLocaleString('en-US')}% of week
+                if week.dailyGraph
+                    .row.hidden-xs
+                        .col-xs-12
+                            canvas(id='myChart' height='50px')
                 table.table.table-striped
                     thead
                         tr
@@ -40,3 +44,45 @@ block content
                                     a.btn.btn-warning(style='width: 100%' href='/payee/view/' + payee.id + '?dt=' + moment(payee.date).format('YYYY-MM-DD')) #{formatCurrency(payee.amount, {format: '%s%v', code: 'USD', symbol: '$'})}
                                 else
                                     a.btn.btn-success(style='width: 100%' href='/payee/view/' + payee.id) Paid
+    script.
+        window.chartColors = {
+            red: 'rgb(255, 99, 132)',
+            orange: 'rgb(255, 159, 64)',
+            yellow: 'rgb(255, 205, 86)',
+            green: 'rgb(75, 192, 192)',
+            blue: 'rgb(54, 162, 235)',
+            purple: 'rgb(153, 102, 255)',
+            grey: 'rgb(201, 203, 207)'
+        };
+        var ctx = document.getElementById("myChart").getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [#{weeks[0].dailyOrder}],
+                datasets: [
+                    {
+                        label: 'Actual per Day',
+                        fill: true,
+                        data: #{JSON.stringify(weeks[0].dailyActual)},
+                        backgroundColor: "rgba(255, 99, 132, 0.5)",
+                        borderColor: window.chartColors.red
+                    },
+                    {
+                        label: 'Calculated per Day',
+                        fill: true,
+                        data: #{JSON.stringify(weeks[0].dailyCalculated)},
+                        backgroundColor: "rgba(75, 192, 192, 0.5)",
+                        borderColor: window.chartColors.green
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
