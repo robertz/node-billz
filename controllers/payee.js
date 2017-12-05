@@ -159,17 +159,16 @@ exports.postSave = async (req, res) => {
 };
 
 // POST insert a payment for payee specified by the id URL parameter
-exports.postPay = (req, res) => {
+exports.postPay = (req, res, next) => {
     let payment = new Payments();
 
     payment.owner = req.user.id;
     payment.payee = req.params.id;
     payment.ref = req.body.ref;
-    payment.amount = req.body.amount;
-
+    payment.amount = req.body.amount.replace(/[^\d.-]/g, "");
+    
     payment.save((err) => {
         if (err) { return next(err); }
-
         req.flash('success', { msg: 'Your payment has been created.' });
         res.redirect('/payee/view/' + req.params.id);
     });

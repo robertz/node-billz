@@ -21,7 +21,7 @@ block content
                     .row
                         .col-xs-12
                             .well
-                                form.form-inline(method='post' action='/payee/pay/' + data.payee.id)
+                                form.form-inline(method='post', action='/payee/pay/' + data.payee.id)
                                     input(type='hidden' name='_csrf' value=_csrf)
                                     input.form-control(type='date' name='ref' value=data.payDate) 
                                     | 
@@ -84,7 +84,7 @@ block content
                         fill: true,
                         data: #{JSON.stringify(data.graph.amounts)},
                         backgroundColor: "rgba(75, 192, 192, 0.5)",
-                        borderColor: window.chartColors.grenn
+                        borderColor: window.chartColors.green
                     }
                 ]
             },

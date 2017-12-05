@@ -8,7 +8,7 @@ block content
         else
             h5 Edit Payee
     .panel-body
-        form.form(method='post' action=(create ? '/payee/save' : '/payee/save/' + payee.id))
+        form.form(method='post', action=(create ? '/payee/save' : '/payee/save/' + payee.id))
             input(type='hidden' name='_csrf' value=_csrf)
             .row
                 .col-xs-12.col-sm-6
