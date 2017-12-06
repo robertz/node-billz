@@ -28,6 +28,12 @@ block content
                                     input.form-control(type='text' name='amount' value=formatCurrency(data.payee.amount))
                                     | 
                                     input.btn.btn-primary(type='submit' value='Submit')
+            if data.payee.url.length
+                .row
+                    .col-xs-12
+                        | Payment URL (
+                        a(href=data.payee.url, target='_blank') LINK
+                        | )
             .row
                 .col-xs-12
                     h6 Description:

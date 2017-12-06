@@ -28,6 +28,9 @@ block content
                 tr
                     td
                         a(href="/payee/view/" + payee._id) #{payee.name}
+                        | 
+                        if payee.url.length
+                            a(href=payee.url, target='_blank') <i class="fa fa-external-link"></i>
                     td.hidden-xs #{payee.description}
                     td #{moment(payee.ref).format('Do')}
                     td $#{formatCurrency(payee.amount)}
