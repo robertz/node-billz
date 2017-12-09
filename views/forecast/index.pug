@@ -1,6 +1,12 @@
 extends ../layout
 
 block content
+    .row(style='margin-bottom: 24px;')
+        .col-xs-6 
+            a.btn.btn-primary(href='/forecast?dt=' + previousWeek, style='width: 150px;') <i class="fa fa-arrow-left"></i> Previous
+        .col-xs-6
+            .pull-right
+                a.btn.btn-primary(href='/forecast?dt=' + nextWeek, style='width: 150px;') Next <i class="fa fa-arrow-right"></i>
     div
         for week in weeks
             .panel.panel-primary
