@@ -23,7 +23,7 @@ block content
                     div.help-block.with-errors
                 .col-xs-12.col-sm-6
                     label(for='amount') Amount:
-                    input.form-control(id='amount' type='number' name='amount' value=(create === false ? payee.amount : false)  data-error='Amount is required' required)
+                    input.form-control(id='amount' type='number' step='0.01' name='amount' value=(create === false ? payee.amount : false)  data-error='Amount is required' required)
                 .col-xs-12
                     label.form-label(for='description') Description:
                     input.form-control(id='description' type='text' name='description' value=(create === false ? payee.description : false) )

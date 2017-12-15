@@ -23,9 +23,9 @@ block content
                             .well
                                 form.form-inline(method='post', action='/payee/pay/' + data.payee.id)
                                     input(type='hidden' name='_csrf' value=_csrf)
-                                    input.form-control(type='date' name='ref' value=data.payDate) 
+                                    input.form-control(type='date' name='ref' value=data.payDate required) 
                                     | 
-                                    input.form-control(type='text' name='amount' value=formatCurrency(data.payee.amount))
+                                    input.form-control(type='number' step='0.01' name='amount' value=formatCurrency(data.payee.amount) required)
                                     | 
                                     input.btn.btn-primary(type='submit' value='Submit')
             if data.payee.url.length
