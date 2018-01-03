@@ -56,6 +56,7 @@ const app = express();
  */
 
 cachegoose(mongoose, {});
+
 mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI, {
     useMongoClient: true

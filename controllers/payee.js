@@ -11,6 +11,7 @@ exports.getIndex = async (req, res) => {
     const getPayees = () => {
         return Payee.find({ owner: req.user.id })
             .sort({ day: 1 })
+            .cache()
             .then((payees) => {
                 return payees;
             });
