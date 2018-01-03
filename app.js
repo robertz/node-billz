@@ -155,10 +155,10 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
 
  // payee related routes
 app.get('/payee', passportConfig.isAuthenticated, payeeController.getIndex);
-app.get('/payee/create', passportConfig.isAuthenticated, payeeController.getCreate);        // Data entry for new payee
-app.post('/payee/create', passportConfig.isAuthenticated, payeeController.postCreate);      // Save a new payee
+app.post('/payee/save', passportConfig.isAuthenticated, payeeController.postSave);      // Save a new payee
 app.get('/payee/view/:id', passportConfig.isAuthenticated, payeeController.getView);        // View a payee
-app.get('/payee/edit/:id', passportConfig.isAuthenticated, payeeController.getEdit);        // Edit a payee
+app.get('/payee/edit/:id', passportConfig.isAuthenticated, payeeController.getEdit);
+app.get('/payee/edit', passportConfig.isAuthenticated, payeeController.getEdit);        // Edit a payee
 app.post('/payee/save/:id', passportConfig.isAuthenticated, payeeController.postSave);      // Update a payee
 app.post('/payee/pay/:id', passportConfig.isAuthenticated, payeeController.postPay);        // Make a payment
 app.get('/payee/delete/:id', passportConfig.isAuthenticated, payeeController.getDelete);    // Delete a payee

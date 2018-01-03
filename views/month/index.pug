@@ -1,6 +1,12 @@
 extends ../layout
 
 block content
+    .row(style='margin-bottom: 24px;')
+        .col-xs-6 
+            a.btn.btn-primary(href='/month?dt=' + data.prevMonth, style='width: 150px;') <i class="fa fa-arrow-left"></i> Previous
+        .col-xs-6
+            .pull-right
+                a.btn.btn-primary(href='/month?dt=' + data.nextMonth, style='width: 150px;') Next <i class="fa fa-arrow-right"></i>
     div
         .panel.panel-primary
             .panel-heading

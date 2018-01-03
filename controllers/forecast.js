@@ -140,6 +140,8 @@ exports.getIndex = async (req, res) => {
         res.render('forecast/index', {
             title: 'Forecast',
             monthlyTotal: monthlyTotal,
+            previousWeek: new Moment(weekly[0].start).subtract(1, "week").format("YYYY-MM-DD"),
+            nextWeek: new Moment(weekly[0].end).add(1, "day").format("YYYY-MM-DD"),
             weeks: weekly
         });
     }

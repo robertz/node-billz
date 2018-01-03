@@ -78,8 +78,6 @@ exports.getView = async (req, res) => {
             data.avgPayment = payments.reduce((acc, payment) => acc + payment.amount, 0) / payments.length;
         }
 
-        console.dir(data.graph);
-
         res.render('payees/view', {
             title: 'View Payee',
             data: data
@@ -99,53 +97,17 @@ exports.getEdit = (req, res) => {
             .findOne({ _id: req.params.id, owner: req.user._id, deleted: false }, (err, payee) => {
                 res.render('payees/edit', {
                     title: 'Edit Payee',
+                    create: false,
                     payee: payee
                 });
             });
     }
-};
-
-// GET a new payee with values daulted
-exports.getCreate = (req, res) => {
-    res.render('payees/create', {
-        title: 'Create Payee'
-    });
-};
-
-// POST insert the payee and sanitize input
-exports.postCreate = (req, res) => {
-    req.assert('name', 'You must enter a name for this payee').len(1);
-    req.sanitize('name');
-    req.sanitize('url');
-    req.sanitize('description');
-
-    const errors = req.validationErrors();
-
-    if (errors) {
-        req.flash('errors', errors);
-        return res.redirect('/payee/create');
+    else {
+        res.render("payees/edit", {
+          title: "Create Payee",
+          create: true
+        });
     }
-
-    let payee = new Payee();
-
-    payee.name = req.body.name || '';
-    payee.url = req.body.url || '';
-    payee.description = req.body.description || '';
-    payee.ref = req.body.ref || '';
-    payee.amount = req.body.amount || '';
-
-    payee.day = new Moment(payee.ref).format('D');
-    payee.owner = req.user._id;
-    payee.intervalType = 'm';
-
-    payee.save((err) => {
-        if (err) { return next(err); }
-
-        req.flash('success', { msg: 'Your payee ' + payee.name + ' was successfully created.' });
-        res.redirect('/payee/');
-    });
-
-
 };
 
 // POST update the payee to the backend and sanitize the input
@@ -159,7 +121,12 @@ exports.postSave = async (req, res) => {
 
     if (errors) {
         req.flash('errors', errors);
-        return res.redirect('/payee/edit/' + req.params.id);
+        if (req.params.id){
+            return res.redirect("/payee/edit/" + req.params.id);
+        }
+        else {
+            return res.redirect("/payee/edit");
+        }
     }
 
     const getPayee = () => {
@@ -169,11 +136,8 @@ exports.postSave = async (req, res) => {
             })
     }; 
 
-    let payee = await getPayee();
-
-    if (!payee) {
-        payee = new Payee();
-    }
+    let payee = new Payee();
+    if (req.params.id) payee = await getPayee();
 
     payee.name = req.body.name || '';
     payee.url = req.body.url || '';
@@ -183,26 +147,28 @@ exports.postSave = async (req, res) => {
 
     payee.day = new Moment(payee.ref).format('D');
 
+    payee.owner = req.user._id;
+    payee.intervalType = "m";
+
     payee.save((err) => {
         if (err) { return next(err); }
-        req.flash('success', { msg: 'Payee ' + payee.name + ' has been updated.' });
+        req.flash('success', { msg: 'Payee ' + payee.name + ' has been ' + (req.params.id ? 'updated' : 'created') + '.' });
         res.redirect('/payee');
     });
 
 };
 
 // POST insert a payment for payee specified by the id URL parameter
-exports.postPay = (req, res) => {
+exports.postPay = (req, res, next) => {
     let payment = new Payments();
 
     payment.owner = req.user.id;
     payment.payee = req.params.id;
     payment.ref = req.body.ref;
-    payment.amount = req.body.amount;
-
+    payment.amount = req.body.amount.replace(/[^\d.-]/g, "");
+    
     payment.save((err) => {
         if (err) { return next(err); }
-
         req.flash('success', { msg: 'Your payment has been created.' });
         res.redirect('/payee/view/' + req.params.id);
     });

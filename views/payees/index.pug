@@ -3,7 +3,7 @@ extends ../layout
 block content
     row
         col-xs-12
-            a(class='btn btn-primary', href='/payee/create') Create New
+            a(class='btn btn-primary', href='/payee/edit') Create New
     br
     br
     .panel.panel-primary
@@ -28,6 +28,9 @@ block content
                 tr
                     td
                         a(href="/payee/view/" + payee._id) #{payee.name}
+                        if payee.url.length
+                            | 
+                            a(href=payee.url, target='_blank') <i class="fa fa-external-link"></i>
                     td.hidden-xs #{payee.description}
                     td #{moment(payee.ref).format('Do')}
                     td $#{formatCurrency(payee.amount)}

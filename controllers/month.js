@@ -47,7 +47,9 @@ exports.getIndex = async (req, res) => {
                 actual: [],
                 calculated: []
             },
-            payees: []
+            payees: [],
+            nextMonth: null,
+            prevMonth: null
         };
 
         // if dt is passed in the url attempt to set the date
@@ -69,6 +71,9 @@ exports.getIndex = async (req, res) => {
 
         data.timing.startOfMonth = new Moment(ref).startOf('month');
         data.timing.endOfMonth = new Moment(data.timing.startOfMonth).endOf('month');
+
+        data.prevMonth = new Moment(data.timing.startOfMonth).subtract(1, 'month').format('YYYY-MM-DD');
+        data.nextMonth = new Moment(data.timing.startOfMonth).add(1, 'month').format('YYYY-MM-DD');
 
         // Build graph data
         let monthlyPayments = payments.filter((payment) => {
