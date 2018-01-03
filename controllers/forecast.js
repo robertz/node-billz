@@ -10,6 +10,7 @@ exports.getIndex = async (req, res) => {
     const getPayees = () => {
         return Payee.find({ owner: req.user.id })
             .sort({ day: 1 })
+            .cache()
             .then((payees) => {
                 return payees;
             });
@@ -18,6 +19,7 @@ exports.getIndex = async (req, res) => {
     const getPayments = () => {
         return Payment.find({ owner: req.user.id })
             .sort({ ref: -1 })
+            .cache()
             .then((payments) => {
                 return payments;
             });
@@ -146,6 +148,7 @@ exports.getIndex = async (req, res) => {
         });
     }
     catch (err) {
+        console.dir(err);
         req.flash('errors', { msg: 'There was an error attempting to load the requested page' });
         res.redirect('/');
     }
