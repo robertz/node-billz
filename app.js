@@ -18,11 +18,16 @@ const MongoStore = require('connect-mongo')(session);
 const flash = require('express-flash');
 const path = require('path');
 const mongoose = require('mongoose');
+const mongooseCachebox = require('mongoose-cachebox');
 const passport = require('passport');
 const expressValidator = require('express-validator');
 const expressStatusMonitor = require('express-status-monitor');
 const sass = require('node-sass-middleware');
 
+const mongooseCacheOpts = {
+    cache: true,
+    ttl: 120
+};
 
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
@@ -54,6 +59,9 @@ const app = express();
 /**
  * Connect to MongoDB.
  */
+
+mongooseCachebox(mongoose, mongooseCacheOpts);
+
 mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI, {
     useMongoClient: true
