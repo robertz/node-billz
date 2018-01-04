@@ -55,6 +55,8 @@ block content
                                 a.btn.btn-warning(style='width: 100%' href='/payee/view/' + payee.id + '?dt=' + moment(payee.date).format('YYYY-MM-DD')) #{formatCurrency(payee.amount, {format: '%s%v', code: 'USD', symbol: '$'})}
                             else
                                 a.btn.btn-success(style='width: 100%' href='/payee/view/' + payee.id) Paid
+                                
+    script(src='//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js')
     script.
         window.chartColors = {
             red: 'rgb(255, 99, 132)',
