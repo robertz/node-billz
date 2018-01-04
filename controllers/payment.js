@@ -9,6 +9,7 @@ exports.getView = async (req, res) => {
 
     const getPayees = () => {
         return Payee.find({ owner: req.user.id })
+            .cache(86400, req.user.id + '__payees')
             .then((payees) => {
                 return payees;
             });

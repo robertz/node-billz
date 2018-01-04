@@ -4,6 +4,7 @@ const Payee = require('../models/Payee');
 const Payments = require('../models/Payment');
 const Moment = require('moment-timezone');
 const _ = require('lodash');
+const cachegoose = require('cachegoose');
 
 // GET default payee handler
 exports.getIndex = async (req, res) => {
@@ -11,7 +12,7 @@ exports.getIndex = async (req, res) => {
     const getPayees = () => {
         return Payee.find({ owner: req.user.id })
             .sort({ day: 1 })
-            .cache()
+            .cache(86400, req.user.id + '__payees')
             .then((payees) => {
                 return payees;
             });
@@ -112,7 +113,7 @@ exports.getEdit = (req, res) => {
 };
 
 // POST update the payee to the backend and sanitize the input
-exports.postSave = async (req, res) => {
+exports.postSave = async (req, res, next) => {
     req.assert('name', 'You must enter a name for this payee').len(1);
     req.sanitize('name');
     req.sanitize('url');
@@ -153,6 +154,7 @@ exports.postSave = async (req, res) => {
 
     payee.save((err) => {
         if (err) { return next(err); }
+        cachegoose.clearCache(req.user.id + '__payees');
         req.flash('success', { msg: 'Payee ' + payee.name + ' has been ' + (req.params.id ? 'updated' : 'created') + '.' });
         res.redirect('/payee');
     });
@@ -170,6 +172,7 @@ exports.postPay = (req, res, next) => {
     
     payment.save((err) => {
         if (err) { return next(err); }
+        cachegoose.clearCache(req.user.id + "__payments");
         req.flash('success', { msg: 'Your payment has been created.' });
         res.redirect('/payee/view/' + req.params.id);
     });
@@ -183,6 +186,8 @@ exports.getDelete = (req, res) => {
 
         Payee.remove({ owner: req.user.id, _id: req.params.id }, (err) => {
             if (err) { return next(err);}
+            cachegoose.clearCache(req.user.id + "__payees");
+            cachegoose.clearCache(req.user.id + "__payments");
 
             // and all associated payments
             Payments.remove({ owner: req.user.id, payee: req.params.id }, (err) => {
