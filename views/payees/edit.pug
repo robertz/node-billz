@@ -1,35 +1,35 @@
 extends ../layout
 
 block content
-  .panel.panel-primary
-    .panel-heading
-        if create
-            h5 Create Payee
-        else
-            h5 Edit Payee
-    .panel-body
-        form.form(method='post', action=(create ? '/payee/save' : '/payee/save/' + payee.id))
-            input(type='hidden' name='_csrf' value=_csrf)
-            .row
-                .col-xs-12.col-sm-6
-                    label(for='name') Name:
-                    input.form-control(id='name' type='text' name='name' value=(create === false ? payee.name : false) data-error='Name is required' required)
-                .col-xs-12.col-sm-6
-                    label(for='url') Payment URL:
-                    input.form-control(id='url' type='url' name='url' value=(create === false ? payee.url : false)  data-error='Please enter a valid URL')
-                .col-xs-12.col-sm-6
-                    label(for='due') Due:
-                    input.form-control(id='due' type='date' name='ref' value=(create === false ? payee.ref : false) data-error='Due date is required' required)
-                    div.help-block.with-errors
-                .col-xs-12.col-sm-6
-                    label(for='amount') Amount:
-                    input.form-control(id='amount' type='number' step='0.01' name='amount' value=(create === false ? payee.amount : false)  data-error='Amount is required' required)
-                .col-xs-12
-                    label.form-label(for='description') Description:
-                    input.form-control(id='description' type='text' name='description' value=(create === false ? payee.description : false) )
-                .col-xs-12
-                    br
-                    input.btn.btn-primary(type='submit' value='Submit') 
-                    if !create 
-                        | 
-                        a.btn.btn-danger(href='/payee/delete/' + payee.id) Delete Payee
+    .panel.panel-primary
+        .panel-heading
+            if create
+                h5 Create Payee
+            else
+                h5 Edit Payee
+        .panel-body
+            form.form(method='post', action=(create ? '/payee/save' : '/payee/save/' + payee.id))
+                input(type='hidden' name='_csrf' value=_csrf)
+                .row
+                    .col-xs-12.col-sm-6
+                        label(for='name') Name:
+                        input.form-control(id='name' type='text' name='name' value=(create === false ? payee.name : false) data-error='Name is required' required)
+                    .col-xs-12.col-sm-6
+                        label(for='url') Payment URL:
+                        input.form-control(id='url' type='url' name='url' value=(create === false ? payee.url : false)  data-error='Please enter a valid URL')
+                    .col-xs-12.col-sm-6
+                        label(for='due') Due:
+                        input.form-control(id='due' type='date' name='ref' value=(create === false ? payee.ref : false) data-error='Due date is required' required)
+                        div.help-block.with-errors
+                    .col-xs-12.col-sm-6
+                        label(for='amount') Amount:
+                        input.form-control(id='amount' type='number' step='0.01' name='amount' value=(create === false ? payee.amount : false)  data-error='Amount is required' required)
+                    .col-xs-12
+                        label.form-label(for='description') Description:
+                        input.form-control(id='description' type='text' name='description' value=(create === false ? payee.description : false) )
+                    .col-xs-12
+                        br
+                        input.btn.btn-primary(type='submit' value='Submit') 
+                        if !create 
+                            | 
+                            a.btn.btn-danger(href='/payee/delete/' + payee.id) Delete Payee

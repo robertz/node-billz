@@ -12,7 +12,7 @@ exports.getIndex = async (req, res) => {
     const getPayees = () => {
         return Payee.find({ owner: req.user.id })
             .sort({ day: 1 })
-            .cache(86400, req.user.id + '__payees')
+            .cache(0, req.user.id + '__payees')
             .then((payees) => {
                 return payees;
             });
