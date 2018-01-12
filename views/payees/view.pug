@@ -69,6 +69,8 @@ block content
                         td #{moment(payment.ref).format('M/D/YYYY')}
                         td #{moment(payment.createdAt).format('MMMM Do YYYY, h:mm:ss a')}
                         td #{formatCurrency(payment.amount, {format: '%s%v', code: 'USD', symbol: '$'})}
+
+    script(src='/js/Chart.min.js')
     script.
         window.chartColors = {
             red: 'rgb(255, 99, 132)',
