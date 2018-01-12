@@ -34,7 +34,7 @@ block content
                         th Name
                         th(width='10%') Mark Paid
                 for payee in data.payees
-                    tr(class=(payee.currentWeek == true) ? 'active' : undefined)
+                    tr(class=(payee.currentWeek === true) ? 'active' : undefined)
                         td 
                             if (payee.isToday)
                                 strong #{moment(payee.date).format('dddd, M/D/YYYY')}

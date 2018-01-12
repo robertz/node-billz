@@ -60,9 +60,9 @@ exports.getIndex = async (req, res) => {
 
         // Calculate the range for the current week
         // adjust the start of the week to the user offset.. 0 = Sunday 6 = Saturday
-        data.timing.startOfWeek = new Moment(ref).startOf('week').subtract(7 - req.user.offset, 'days');
+        data.timing.startOfWeek = new Moment().startOf('week').subtract(7 - req.user.offset, 'days');
         // Compensate for offset logic going too far back
-        if (ref.diff(data.timing.startOfWeek, 'days') >= 7) {
+        if (new Moment().diff(data.timing.startOfWeek, 'days') >= 7) {
             data.timing.startOfWeek.add(7, 'days');
         }
         data.timing.endOfWeek = new Moment(data.timing.startOfWeek).add(6, 'days');
