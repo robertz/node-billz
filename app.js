@@ -39,7 +39,7 @@ const payeeController = require('./controllers/payee');
 const forecastController = require('./controllers/forecast');
 const paymentController = require('./controllers/payment');
 const monthController = require('./controllers/month');
-const mapController = require('./controllers/map');
+const apiController = require('./controllers/api');
 
 /**
  * API keys and Passport configuration.
@@ -153,6 +153,14 @@ app.post('/account/delete', passportConfig.isAuthenticated, userController.postD
 app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
 
 /**
+ * API routes
+ */
+app.get('/api/user/:userid/payees', apiController.getPayees);
+app.get("/api/user/:userid/payee/:payeeid", apiController.getPayee);
+app.get('/api/user/:userid/payments', apiController.getPayments);
+app.get('/api/user/:userid/payments/:payeeid', apiController.getPayeePayments);
+
+/**
  * node-billz specific routes
  */
 
@@ -171,9 +179,6 @@ app.get('/forecast', passportConfig.isAuthenticated, forecastController.getIndex
 
 // month related routes
 app.get('/month', passportConfig.isAuthenticated, monthController.getIndex);
-
-// map related routes
-app.get('/map', passportConfig.isAuthenticated, mapController.getIndex);
 
 // payment related routes
 app.get('/payment', passportConfig.isAuthenticated, paymentController.getView);
