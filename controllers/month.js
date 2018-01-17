@@ -115,6 +115,8 @@ exports.getIndex = async (req, res) => {
                 url: payees[i].url,
                 description: payees[i].description,
                 amount: payees[i].amount,
+                apr: payees[i].apr,
+                autopay: payees[i].autopay,
                 currentWeek: eventDate.isBetween(ts, te) ? true : false,
                 isToday: eventDate.startOf('day').isSame(new Moment().startOf('day')) ? true : false,
                 isPaid: false

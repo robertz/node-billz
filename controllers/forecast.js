@@ -95,6 +95,7 @@ exports.getIndex = async (req, res) => {
                         description: payees[i].description, 
                         amount: payees[i].amount,
                         apr: payees[i].apr,
+                        autopay: payees[i].autopay,
                         isPaid: false 
                     };
 

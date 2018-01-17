@@ -32,6 +32,9 @@ block content
                         if payee.url.length
                             | 
                             a(href=payee.url, target='_blank') <i class="fa fa-external-link"></i>
+                        if payee.autopay
+                            | 
+                            i(class='fa fa-refresh' style='color: #4d90fc;')
                     td.hidden-xs #{payee.description}
                     td.hidden-xs #{payee.apr ? payee.apr.toFixed(2) : ''}
                     td #{moment(payee.ref).format('Do')}

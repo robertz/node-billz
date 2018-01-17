@@ -39,6 +39,10 @@ block content
                     .col-xs-12
                         h6 APR %:
                         p #{data.payee.apr.toFixed(2)}
+            if data.payee.autopay
+                .row
+                    .col-xs-12
+                        h6 Autopay Enabled
             .row
                 .col-xs-12
                     h6 Description:

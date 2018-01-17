@@ -48,6 +48,9 @@ block content
                             if (payee.url)
                                 |    
                                 a(href=payee.url target='_blank') <i class="fa fa-external-link"></i>
+                            if payee.autopay
+                                | 
+                                i(class='fa fa-refresh' style='color: #4d90fc;')
                             br
                             small #{payee.description}
                         td 

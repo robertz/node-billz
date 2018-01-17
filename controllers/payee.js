@@ -146,7 +146,8 @@ exports.postSave = async (req, res, next) => {
     payee.ref = req.body.ref || '';
     payee.amount = req.body.amount || '';
     payee.apr = req.body.apr || '';
-
+    payee.autopay = req.body.autopay || '';
+    
     payee.day = new Moment(payee.ref).format('D');
 
     payee.owner = req.user._id;

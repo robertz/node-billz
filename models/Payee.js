@@ -10,6 +10,7 @@ const payeeSchema = new mongoose.Schema({
     url: String,
     day: { type: Number, min: 1, max: 31 },
     apr: { type: Number, min: 0, max: 100, default: 0 },
+    autopay: { type: Boolean, default: false },
     active: { type: Boolean, default: true },
     deleted: { type: Boolean, default: false }
 }, {
