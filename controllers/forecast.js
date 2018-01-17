@@ -93,7 +93,8 @@ exports.getIndex = async (req, res) => {
                         name: payees[i].name, 
                         url: payees[i].url, 
                         description: payees[i].description, 
-                        amount: payees[i].amount, 
+                        amount: payees[i].amount,
+                        apr: payees[i].apr,
                         isPaid: false 
                     };
 

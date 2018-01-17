@@ -56,7 +56,6 @@ exports.getView = async (req, res) => {
     try {
         let payee = await getPayee();
         let payments = await getPayments();
-
         let data = {
             payee: payee,
             avgPayment: 0,
@@ -146,6 +145,7 @@ exports.postSave = async (req, res, next) => {
     payee.description = req.body.description || '';
     payee.ref = req.body.ref || '';
     payee.amount = req.body.amount || '';
+    payee.apr = req.body.apr || '';
 
     payee.day = new Moment(payee.ref).format('D');
 

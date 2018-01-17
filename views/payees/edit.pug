@@ -17,13 +17,16 @@ block content
                     .col-xs-12.col-sm-6
                         label(for='url') Payment URL:
                         input.form-control(id='url' type='url' name='url' value=(create === false ? payee.url : false)  data-error='Please enter a valid URL')
-                    .col-xs-12.col-sm-6
+                    .col-xs-12.col-sm-4
                         label(for='due') Due:
                         input.form-control(id='due' type='date' name='ref' value=(create === false ? payee.ref : false) data-error='Due date is required' required)
                         div.help-block.with-errors
-                    .col-xs-12.col-sm-6
+                    .col-xs-12.col-sm-4
                         label(for='amount') Amount:
                         input.form-control(id='amount' type='number' step='0.01' name='amount' value=(create === false ? payee.amount : false)  data-error='Amount is required' required)
+                    .col-xs-12.col-sm-4
+                        label(for='apr') APR:
+                        input.form-control(id='apr' type='number' step='0.01' name='apr' value=(create === false ? payee.apr : false))
                     .col-xs-12
                         label.form-label(for='description') Description:
                         input.form-control(id='description' type='text' name='description' value=(create === false ? payee.description : false) )

@@ -33,7 +33,12 @@ block content
                     .col-xs-12
                         | Payment URL (
                         a(href=data.payee.url, target='_blank') LINK
-                        | )
+                        | ) 
+            if data.payee.apr
+                .row
+                    .col-xs-12
+                        h6 APR %:
+                        p #{data.payee.apr.toFixed(2)}
             .row
                 .col-xs-12
                     h6 Description:

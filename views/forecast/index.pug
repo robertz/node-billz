@@ -35,6 +35,7 @@ block content
                         tr
                             th(width='20%') Date
                             th Name
+                            th(width='10%') APR %
                             th(width='10%') Mark Paid
                     for payee in week.payees
                         tr
@@ -45,6 +46,7 @@ block content
                                     a(href=payee.url target='_blank') <i class="fa fa-external-link"></i>
                                 br
                                 small #{payee.description}
+                            td #{payee.apr ? payee.apr.toFixed(2) : ''}
                             td 
                                 if payee.isPaid == false
                                     a.btn.btn-warning(style='width: 100%' href='/payee/view/' + payee.id + '?dt=' + moment(payee.date).format('YYYY-MM-DD')) #{formatCurrency(payee.amount, {format: '%s%v', code: 'USD', symbol: '$'})}
