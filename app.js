@@ -59,7 +59,8 @@ if(process.env.USE_REDIS){
     cachegoose(mongoose, {
         engine: 'redis',
         port: process.env.REDIS_PORT,
-        host: process.env.REDIS_HOST
+        host: process.env.REDIS_HOST,
+        password: process.env.REDIS_PASSWORD
     });
 }
 else { // in-memory cache
