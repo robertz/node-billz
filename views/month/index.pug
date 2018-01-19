@@ -32,6 +32,7 @@ block content
                     tr
                         th(width='20%') Date
                         th Name
+                        th.hidden-xs(width='10%') APR %
                         th(width='10%') Mark Paid
                 for payee in data.payees
                     tr(class=(payee.currentWeek === true) ? 'active' : undefined)
@@ -53,6 +54,7 @@ block content
                                 i(class='fa fa-refresh' style='color: #4d90fc;')
                             br
                             small #{payee.description}
+                        td.hidden-xs #{payee.apr ? payee.apr.toFixed(2) : ''}
                         td 
                             if payee.isPaid == false
                                 a.btn.btn-warning(style='width: 100%' href='/payee/view/' + payee.id + '?dt=' + moment(payee.date).format('YYYY-MM-DD')) #{formatCurrency(payee.amount, {format: '%s%v', code: 'USD', symbol: '$'})}
