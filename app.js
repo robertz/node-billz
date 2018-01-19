@@ -55,7 +55,17 @@ const app = express();
  * Connect to MongoDB.
  */
 
-cachegoose(mongoose, {});
+if(process.env.USE_REDIS){
+    cachegoose(mongoose, {
+        engine: 'redis',
+        port: process.env.REDIS_PORT,
+        host: process.env.REDIS_HOST
+    });
+}
+else { // in-memory cache
+    cachegoose(mongoose, {});
+}
+
 
 mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI, {
