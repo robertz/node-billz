@@ -76,7 +76,7 @@ block content
                     tr
                         td #{data.payee.name}
                         td #{moment(payment.ref).format('M/D/YYYY')}
-                        td #{moment(payment.createdAt).format('MMMM Do YYYY, h:mm:ss a')}
+                        td #{moment(payment.createdAt).format('M/D/YYYY')}
                         td #{formatCurrency(payment.amount, {format: '%s%v', code: 'USD', symbol: '$'})}
 
     script(src='/js/Chart.min.js')

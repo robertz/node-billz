@@ -16,7 +16,7 @@ block content
                     td 
                         a(href='/payee/view/' + payment.payee) #{payment.name}
                     td #{moment(payment.ref).format('MMMM Do YYYY')}
-                    td #{moment(payment.createdAt).format('MMMM Do YYYY, h:mm:ss a')}
+                    td #{moment(payment.createdAt).format('MMMM Do YYYY')}
                     td #{formatCurrency(payment.amount, {format: '%s%v', code: 'USD', symbol: '$'})}
         nav
             ul.pagination
