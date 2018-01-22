@@ -2264,7 +2264,22 @@ mongodb-core@2.1.17:
     bson "~1.0.4"
     require_optional "~1.0.0"
 
-mongodb@2.2.33, "mongodb@>= 1.2.0 <3.0.0":
+mongodb-core@2.1.18:
+  version "2.1.18"
+  resolved "https://registry.yarnpkg.com/mongodb-core/-/mongodb-core-2.1.18.tgz#4c46139bdf3a1f032ded91db49f38eec01659050"
+  dependencies:
+    bson "~1.0.4"
+    require_optional "~1.0.0"
+
+mongodb@2.2.34:
+  version "2.2.34"
+  resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-2.2.34.tgz#a34f59bbeb61754aec432de72c3fe21526a44c1a"
+  dependencies:
+    es6-promise "3.2.1"
+    mongodb-core "2.1.18"
+    readable-stream "2.2.7"
+
+"mongodb@>= 1.2.0 <3.0.0":
   version "2.2.33"
   resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-2.2.33.tgz#b537c471d34a6651b48f36fdbf29750340e08b50"
   dependencies:
@@ -2273,15 +2288,15 @@ mongodb@2.2.33, "mongodb@>= 1.2.0 <3.0.0":
     readable-stream "2.2.7"
 
 mongoose@^4.6.6:
-  version "4.13.8"
-  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-4.13.8.tgz#73af796be55fdfaf3d2622f8fa699f4a19bc84b4"
+  version "4.13.9"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-4.13.9.tgz#ca4d99aed6e36e87854c2295387e7ea17966cfe3"
   dependencies:
     async "2.1.4"
     bson "~1.0.4"
     hooks-fixed "2.0.2"
     kareem "1.5.0"
     lodash.get "4.4.2"
-    mongodb "2.2.33"
+    mongodb "2.2.34"
     mpath "0.3.0"
     mpromise "0.5.5"
     mquery "2.3.3"
@@ -3187,9 +3202,13 @@ scss-tokenizer@^0.2.3:
     js-base64 "^2.1.8"
     source-map "^0.4.2"
 
-"semver@2 || 3 || 4 || 5", semver@^5.0.3, semver@^5.1.0:
+"semver@2 || 3 || 4 || 5", semver@^5.0.3:
   version "5.4.1"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.4.1.tgz#e059c09d8571f0540823733433505d3a2f00b18e"
+
+semver@^5.1.0:
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-5.5.0.tgz#dc4bbc7a6ca9d916dee5d43516f0092b58f7b8ab"
 
 semver@~5.0.1:
   version "5.0.3"
