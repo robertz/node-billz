@@ -202,17 +202,19 @@ app.get('/auth/google/callback', passport.authenticate('google', { failureRedire
     res.redirect(req.session.returnTo || '/');
 });
 
+
+
+/**
+ * Error Handler.
+ */
+app.use(errorHandler());
+
 /**
  * Handle 404 errors
  */
 app.use((req, res) => {
     res.status(404).send('404: File Not Found');
 });
-
-/**
- * Error Handler.
- */
-app.use(errorHandler());
 
 /**
  * Start Express server.
