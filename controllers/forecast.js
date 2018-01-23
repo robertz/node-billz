@@ -91,7 +91,7 @@ exports.getIndex = async (req, res) => {
                     // there is a payment for the current period. Payee data may be required for 
                     // historical reasons
 
-                    if( eventDate.isAfter(new Moment(payees[i].ref)) && (payees[i].active || isPaid.length) ){
+                    if( (eventDate.isAfter(new Moment(payees[i].ref)) || eventDate.isSame(new Moment(payees[i].ref)) )&& (payees[i].active || isPaid.length) ){
 
                         // Stub out the payment information for the page
                         let payeeData = { 
