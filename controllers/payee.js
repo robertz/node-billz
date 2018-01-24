@@ -6,6 +6,25 @@ const Moment = require('moment-timezone');
 const _ = require('lodash');
 const cachegoose = require('cachegoose');
 
+
+
+exports.getVue = async (req, res) => {
+
+    try {
+
+        res.render('payees/vue', {
+            title: 'Payees',
+            userid: req.user.id
+        });        
+    }
+    catch (err) {
+        req.flash('errors', { msg: 'There was an error attempting to load the requested page' });
+        res.redirect('/');
+    }
+
+};
+
+
 // GET default payee handler
 exports.getIndex = async (req, res) => {
 

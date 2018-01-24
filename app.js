@@ -176,7 +176,11 @@ app.get('/api/user/:userid/payments/:payeeid', apiController.getPayeePayments);
  */
 
  // payee related routes
-app.get('/payee', passportConfig.isAuthenticated, payeeController.getIndex);
+// app.get('/payee', passportConfig.isAuthenticated, payeeController.getIndex);
+
+app.get("/payee", passportConfig.isAuthenticated, payeeController.getVue);
+
+
 app.post('/payee/save', passportConfig.isAuthenticated, payeeController.postSave);      // Save a new payee
 app.get('/payee/view/:id', passportConfig.isAuthenticated, payeeController.getView);        // View a payee
 app.get('/payee/edit/:id', passportConfig.isAuthenticated, payeeController.getEdit);

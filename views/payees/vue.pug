@@ -1,0 +1,45 @@
+extends ../layout
+
+block content
+    row
+        col-xs-12
+            a(class='btn btn-primary', href='/payee/edit') Create New
+    br
+    br
+
+    div(id="app")
+        .panel.panel-primary
+            .panel-heading
+                h5 Who do I pay each month?
+            .panel-body
+                .row
+                    .col-xs-6.col-sm-4
+                        small(style='font-variant: small-caps;') Active Payees
+                        h4 {{ stats.total}}
+                    .col-xs-6.col-sm-4
+                        small(style='font-variant: small-caps;') Monthly Amount
+                        h4 {{ stats.amount | currency }}
+            table.table.table-striped
+                thead
+                    tr
+                        th Name
+                        th.hidden-xs Description
+                        th.hidden-xs APR %
+                        th Due
+                        th Amount
+
+                tr(v-for="payee in payees")
+                    td
+                        a(v-bind:href="'/payee/view/' + payee._id") {{ payee.name }} 
+                    td.hidden-xs {{ payee.description }}
+                    td.hidden-xs {{ payee.apr | apr }}
+                    td {{ payee.ref | day }}
+                    td {{ payee.amount | currency }}
+
+        
+    script.
+        userid = '#{userid}';
+    script(src="//cdnjs.cloudflare.com/ajax/libs/vue/2.5.13/vue.min.js")
+    script(src="//cdn.jsdelivr.net/npm/vue2-filters@0.2.2/dist/vue2-filters.min.js")
+    script(src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js")
+    script(src="/js/payee-vue.js")
