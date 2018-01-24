@@ -7,11 +7,9 @@ const _ = require('lodash');
 const cachegoose = require('cachegoose');
 
 
-
+// GET default payee handler
 exports.getVue = async (req, res) => {
-
     try {
-
         res.render('payees/vue', {
             title: 'Payees',
             userid: req.user.id
@@ -21,37 +19,6 @@ exports.getVue = async (req, res) => {
         req.flash('errors', { msg: 'There was an error attempting to load the requested page' });
         res.redirect('/');
     }
-
-};
-
-
-// GET default payee handler
-exports.getIndex = async (req, res) => {
-
-    const getPayees = () => {
-        return Payee.find({ owner: req.user.id })
-            .sort({ day: 1 })
-            .cache(0, req.user.id + '__payees')
-            .then((payees) => {
-                return payees;
-            });
-    };
-
-    try {
-        let payees = await getPayees();
-
-        res.render('payees/index', {
-            title: 'Payees',
-            payees: payees,
-            total: payees.reduce((acc, payee) => acc + payee.amount, 0),
-            count: payees.length
-        });        
-    }
-    catch (err) {
-        req.flash('errors', { msg: 'There was an error attempting to load the requested page' });
-        res.redirect('/');
-    }
-
 };
 
 // GET the payee specified by the id URL parameter
