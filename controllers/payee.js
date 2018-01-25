@@ -9,10 +9,27 @@ const cachegoose = require('cachegoose');
 
 // GET default payee handler
 exports.getVue = async (req, res) => {
+
+    const getPayees = () => {
+      return Payee.find({ owner: req.user.id })
+        .sort({ day: 1 })
+        .cache(0, req.user.id + "__payees")
+        .then(payees => {
+          return payees;
+        });
+    };
+
+    let payees = await getPayees();
+
+    let data = {
+        userid: req.user.id,
+        payees: payees
+    };
+
     try {
         res.render('payees/vue', {
             title: 'Payees',
-            userid: req.user.id
+            data: data
         });        
     }
     catch (err) {

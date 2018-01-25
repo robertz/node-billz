@@ -8,37 +8,42 @@ block content
     br
 
     div(id="app")
-        .panel.panel-primary
-            .panel-heading
-                h5 Who do I pay each month?
-            .panel-body
-                .row
-                    .col-xs-6.col-sm-4
-                        small(style='font-variant: small-caps;') Active Payees
-                        h4 {{ stats.total}}
-                    .col-xs-6.col-sm-4
-                        small(style='font-variant: small-caps;') Monthly Amount
-                        h4 {{ stats.amount | currency }}
-            table.table.table-striped
-                thead
-                    tr
-                        th Name
-                        th.hidden-xs Description
-                        th.hidden-xs APR %
-                        th Due
-                        th Amount
+        if !data.payees.length
+            h3 You do not have any payees
+            p Add some payees and lets get started!
+            
+        if data.payees.length
+            .panel.panel-primary
+                .panel-heading
+                    h5 Who do I pay each month?
+                .panel-body
+                    .row
+                        .col-xs-6.col-sm-4
+                            small(style='font-variant: small-caps;') Active Payees
+                            h4 {{ stats.total}}
+                        .col-xs-6.col-sm-4
+                            small(style='font-variant: small-caps;') Monthly Amount
+                            h4 {{ stats.amount | currency }}
+                table.table.table-striped
+                    thead
+                        tr
+                            th Name
+                            th.hidden-xs Description
+                            th.hidden-xs APR %
+                            th Due
+                            th Amount
 
-                tr(v-for="payee in payees")
-                    td
-                        a(v-bind:href="'/payee/view/' + payee._id") {{ payee.name }} 
-                    td.hidden-xs {{ payee.description }}
-                    td.hidden-xs {{ payee.apr | apr }}
-                    td {{ payee.ref | day }}
-                    td {{ payee.amount | currency }}
+                    tr(v-for="payee in payees")
+                        td
+                            a(v-bind:href="'/payee/view/' + payee._id") {{ payee.name }} 
+                        td.hidden-xs {{ payee.description }}
+                        td.hidden-xs {{ payee.apr | apr }}
+                        td {{ payee.ref | day }}
+                        td {{ payee.amount | currency }}
 
         
     script.
-        userid = '#{userid}';
+        window.kdfe = !{JSON.stringify(data)};
     script(src="//cdnjs.cloudflare.com/ajax/libs/vue/2.5.13/vue.min.js")
     script(src="//cdn.jsdelivr.net/npm/vue2-filters@0.2.2/dist/vue2-filters.min.js")
     script(src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js")

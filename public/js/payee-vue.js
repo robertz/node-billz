@@ -11,18 +11,11 @@ const app = new Vue({
         }
     },
     created() {
-        fetch('/api/user/' + userid + '/payees')
-        .then(res => res.json())
-        .then(res => {
-            this.payees = res;
-            this.stats.total = res.length;
-            
-            let activePayees = res.filter(payee => payee.active === true);
-
-            this.stats.active = activePayees.length;
-            this.stats.amount = activePayees.reduce((acc, payee) => acc + payee.amount, 0);
-
-        });
+        this.payees = window.kdfe.payees;
+        this.stats.total = this.payees.length;
+        let activePayees = this.payees.filter(payee => payee.active === true);
+        this.stats.active = activePayees.length;
+        this.stats.amount = activePayees.reduce((acc, payee) => acc + payee.amount, 0);
     },
     filters: {
         day: function(date) {
