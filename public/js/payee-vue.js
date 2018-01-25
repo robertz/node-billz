@@ -13,7 +13,7 @@ const app = new Vue({
     created() {
         this.payees = window.kdfe.payees;
         this.stats.total = this.payees.length;
-        let activePayees = this.payees.filter(payee => payee.active === true);
+        let activePayees = this.payees.filter(payee => { return payee.active === true });
         this.stats.active = activePayees.length;
         this.stats.amount = activePayees.reduce((acc, payee) => acc + payee.amount, 0);
     },
