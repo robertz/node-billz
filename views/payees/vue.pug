@@ -32,10 +32,12 @@ block content
                             th.hidden-xs APR %
                             th Due
                             th Amount
-
                     tr(v-for="payee in payees")
                         td
                             a(v-bind:href="'/payee/view/' + payee._id") {{ payee.name }} 
+                            a(v-if="payee.url" v-bind:href="payee.url")
+                                i(class="fa fa-external-link")
+                            i(v-if="payee.autopay" class='fa fa-refresh' style='color: #4d90fc;')
                         td.hidden-xs {{ payee.description }}
                         td.hidden-xs {{ payee.apr | apr }}
                         td {{ payee.ref | day }}

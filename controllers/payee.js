@@ -21,15 +21,13 @@ exports.getVue = async (req, res) => {
 
     let payees = await getPayees();
 
-    let data = {
-        userid: req.user.id,
-        payees: payees
-    };
-
     try {
         res.render('payees/vue', {
             title: 'Payees',
-            data: data
+            data: {
+                userid: req.user.id,
+                payees: payees
+            }
         });        
     }
     catch (err) {
