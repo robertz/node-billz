@@ -35,7 +35,7 @@ block content
                     tr(v-for="payee in payees")
                         td
                             a(v-bind:href="'/payee/view/' + payee._id") {{ payee.name }} 
-                            a(v-if="payee.url" v-bind:href="payee.url")
+                            a(v-if="payee.url" v-bind:href="payee.url" target="_blank")
                                 i(class="fa fa-external-link")
                             i(v-if="payee.autopay" class='fa fa-refresh' style='color: #4d90fc;')
                         td.hidden-xs {{ payee.description }}
