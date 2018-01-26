@@ -6,7 +6,7 @@ new Vue({
     "vuetable-pagination": Vuetable.VuetablePagination
   },
   data: {
-    fields: ["name", "ref", "amount"],
+    fields: ["name", "ref", "createdAt", "amount"],
     apiUrl: '/api/user/' + window.kdfe.userid +'/pay',
     sortOrder: [{ field: "name", direction: "asc" }],
     css: {
