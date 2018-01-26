@@ -2,6 +2,9 @@
 /* eslint no-unused-vars: off */
 const Payee = require("../models/Payee");
 const Payments = require("../models/Payment");
+const Moment = require("moment-timezone");
+const formatCurrency = require("format-currency");
+
 
 exports.getPayees = async (req, res) => {
     return Payee.find({ owner: req.params.userid })
@@ -113,9 +116,9 @@ exports.getPaymentsVue = async (req, res) => {
             data.data.push({
                 name: payeeName[0].name,
                 payee: payment.payee,
-                ref: payment.ref,
-                createdAt: payment.createdAt,
-                amount: payment.amount
+                ref: new Moment(payment.ref).format('MM/DD/YYYY'),
+                createdAt: new Moment(payment.createdAt).format('MM/DD/YYYY'),
+                amount: formatCurrency(payment.amount, {format: '%s%v', code: 'USD', symbol: '$'})
             });
         }
 
