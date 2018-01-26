@@ -23,6 +23,7 @@ const passport = require('passport');
 const expressValidator = require('express-validator');
 const expressStatusMonitor = require('express-status-monitor');
 const sass = require('node-sass-middleware');
+const cors = require('cors');
 
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
@@ -166,10 +167,10 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
 /**
  * API routes
  */
-app.get('/api/user/:userid/payees', apiController.getPayees);
-app.get("/api/user/:userid/payee/:payeeid", apiController.getPayee);
-app.get('/api/user/:userid/payments', apiController.getPayments);
-app.get('/api/user/:userid/payments/:payeeid', apiController.getPayeePayments);
+app.get('/api/user/:userid/payees', cors(), apiController.getPayees);
+app.get("/api/user/:userid/payee/:payeeid", cors(), apiController.getPayee);
+app.get('/api/user/:userid/payments', cors(), apiController.getPayments);
+app.get('/api/user/:userid/payments/:payeeid', cors(), apiController.getPayeePayments);
 
 /**
  * node-billz specific routes
