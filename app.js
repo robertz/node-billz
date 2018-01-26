@@ -23,6 +23,7 @@ const passport = require('passport');
 const expressValidator = require('express-validator');
 const expressStatusMonitor = require('express-status-monitor');
 const sass = require('node-sass-middleware');
+const cors = require('cors');
 
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
@@ -55,7 +56,18 @@ const app = express();
  * Connect to MongoDB.
  */
 
-cachegoose(mongoose, {});
+if(process.env.USE_REDIS){
+    cachegoose(mongoose, {
+        engine: 'redis',
+        port: process.env.REDIS_PORT,
+        host: process.env.REDIS_HOST,
+        password: process.env.REDIS_PASSWORD
+    });
+}
+else { // in-memory cache
+    cachegoose(mongoose, {});
+}
+
 
 mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI, {
@@ -155,17 +167,17 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
 /**
  * API routes
  */
-app.get('/api/user/:userid/payees', apiController.getPayees);
-app.get("/api/user/:userid/payee/:payeeid", apiController.getPayee);
-app.get('/api/user/:userid/payments', apiController.getPayments);
-app.get('/api/user/:userid/payments/:payeeid', apiController.getPayeePayments);
+app.get('/api/user/:userid/payees', cors(), apiController.getPayees);
+app.get("/api/user/:userid/payee/:payeeid", cors(), apiController.getPayee);
+app.get('/api/user/:userid/payments', cors(), apiController.getPayments);
+app.get('/api/user/:userid/payments/:payeeid', cors(), apiController.getPayeePayments);
 
 /**
  * node-billz specific routes
  */
 
  // payee related routes
-app.get('/payee', passportConfig.isAuthenticated, payeeController.getIndex);
+app.get("/payee", passportConfig.isAuthenticated, payeeController.getVue);
 app.post('/payee/save', passportConfig.isAuthenticated, payeeController.postSave);      // Save a new payee
 app.get('/payee/view/:id', passportConfig.isAuthenticated, payeeController.getView);        // View a payee
 app.get('/payee/edit/:id', passportConfig.isAuthenticated, payeeController.getEdit);
@@ -191,10 +203,19 @@ app.get('/auth/google/callback', passport.authenticate('google', { failureRedire
     res.redirect(req.session.returnTo || '/');
 });
 
+
+
 /**
  * Error Handler.
  */
 app.use(errorHandler());
+
+/**
+ * Handle 404 errors
+ */
+app.use((req, res) => {
+    res.status(404).send('404: File Not Found');
+});
 
 /**
  * Start Express server.

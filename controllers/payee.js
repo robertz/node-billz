@@ -6,33 +6,34 @@ const Moment = require('moment-timezone');
 const _ = require('lodash');
 const cachegoose = require('cachegoose');
 
+
 // GET default payee handler
-exports.getIndex = async (req, res) => {
+exports.getVue = async (req, res) => {
 
     const getPayees = () => {
-        return Payee.find({ owner: req.user.id })
-            .sort({ day: 1 })
-            .cache(0, req.user.id + '__payees')
-            .then((payees) => {
-                return payees;
-            });
+      return Payee.find({ owner: req.user.id })
+        .sort({ day: 1 })
+        .cache(0, req.user.id + "__payees")
+        .then(payees => {
+          return payees;
+        });
     };
 
-    try {
-        let payees = await getPayees();
+    let payees = await getPayees();
 
-        res.render('payees/index', {
+    try {
+        res.render('payees/vue', {
             title: 'Payees',
-            payees: payees,
-            total: payees.reduce((acc, payee) => acc + payee.amount, 0),
-            count: payees.length
+            data: {
+                userid: req.user.id,
+                payees: payees
+            }
         });        
     }
     catch (err) {
         req.flash('errors', { msg: 'There was an error attempting to load the requested page' });
         res.redirect('/');
     }
-
 };
 
 // GET the payee specified by the id URL parameter
@@ -146,7 +147,8 @@ exports.postSave = async (req, res, next) => {
     payee.ref = req.body.ref || '';
     payee.amount = req.body.amount || '';
     payee.apr = req.body.apr || '';
-
+    payee.autopay = req.body.autopay || '';
+    
     payee.day = new Moment(payee.ref).format('D');
 
     payee.owner = req.user._id;

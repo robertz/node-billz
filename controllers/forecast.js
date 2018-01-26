@@ -80,40 +80,51 @@ exports.getIndex = async (req, res) => {
                 // ts and te is one day before and one day after so dates fall in between
                 let ts = new Moment(startOfWeek).subtract(1, "day");
                 let te = new Moment(endOfWeek).add(1, "day");
+
                 if (eventDate.isBetween(ts, te)) {
                     // Is the current payee/payment ref found in the payment list
                     let isPaid = payments.filter((payment) => {
                         return (payment.payee == payees[i].id && payment.ref == eventDate.format("YYYY-MM-DD"));
                     });
 
-                    // Stub out the payment information for the page
-                    let payeeData = { 
-                        id: payees[i].id, 
-                        date: eventDate, 
-                        name: payees[i].name, 
-                        url: payees[i].url, 
-                        description: payees[i].description, 
-                        amount: payees[i].amount,
-                        apr: payees[i].apr,
-                        isPaid: false 
-                    };
+                    // Hide occurences of payees before its ref date AND the payee is ACTIVE OR
+                    // there is a payment for the current period. Payee data may be required for 
+                    // historical reasons
 
-                    // Calculate the daily caclulated values
-                    weeklyTemplate.dailyCalculated[ weeklyTemplate.dailyOrder.indexOf(eventDate.format('D')) ] += payees[i].amount.toFixed(2) * 1;
+                    if( (eventDate.isAfter(new Moment(payees[i].ref)) || eventDate.isSame(new Moment(payees[i].ref)) ) && (payees[i].active || isPaid.length) ){
 
-                    // If the bill is paid, mark the payee and add the amount
-                    if (isPaid.length) {
-                        payeeData.isPaid = true;
-                        let payeeAmount = isPaid.reduce((acc, payment) => acc + payment.amount, 0).toFixed(2) * 1;
-                        weeklyTemplate.amountPaid += payeeAmount;
-                        // Calculate the daily actual values
-                        weeklyTemplate.dailyActual[ weeklyTemplate.dailyOrder.indexOf(eventDate.format('D')) ] += payeeAmount * 1;
+                        // Stub out the payment information for the page
+                        let payeeData = { 
+                            id: payees[i].id, 
+                            date: eventDate, 
+                            name: payees[i].name, 
+                            url: payees[i].url, 
+                            description: payees[i].description, 
+                            amount: payees[i].amount,
+                            apr: payees[i].apr,
+                            autopay: payees[i].autopay,
+                            isPaid: false 
+                        };
+
+                        // Calculate the daily caclulated values
+                        weeklyTemplate.dailyCalculated[ weeklyTemplate.dailyOrder.indexOf(eventDate.format('D')) ] += payees[i].amount.toFixed(2) * 1;
+
+                        // If the bill is paid, mark the payee and add the amount
+                        if (isPaid.length) {
+                            payeeData.isPaid = true;
+                            let payeeAmount = isPaid.reduce((acc, payment) => acc + payment.amount, 0).toFixed(2) * 1;
+                            weeklyTemplate.amountPaid += payeeAmount;
+                            // Calculate the daily actual values
+                            weeklyTemplate.dailyActual[ weeklyTemplate.dailyOrder.indexOf(eventDate.format('D')) ] += payeeAmount * 1;
+                        }
+
+                        // Push the current payee info into the payee array
+                        weeklyTemplate.payees.push(payeeData);
+                        weeklyTemplate.amountDue += payees[i].amount;
                     }
 
-                    // Push the current payee info into the payee array
-                    weeklyTemplate.payees.push(payeeData);
-                    weeklyTemplate.amountDue += payees[i].amount;
                 }
+
             }
 
             // Handle summing things up for the current week

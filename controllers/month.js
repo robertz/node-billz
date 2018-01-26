@@ -107,30 +107,40 @@ exports.getIndex = async (req, res) => {
                 return payment.payee == payees[i].id && payment.ref == eventDate.format('YYYY-MM-DD');
             });
 
-            // Stub out the payment information for the page
-            let payeeData = {
-                id: payees[i].id,
-                date: eventDate,
-                name: payees[i].name,
-                url: payees[i].url,
-                description: payees[i].description,
-                amount: payees[i].amount,
-                currentWeek: eventDate.isBetween(ts, te) ? true : false,
-                isToday: eventDate.startOf('day').isSame(new Moment().startOf('day')) ? true : false,
-                isPaid: false
-            };
+            // Hide occurences of payees before its ref date AND the payee is ACTIVE OR
+            // there is a payment for the current period. Payee data may be required for 
+            // historical reasons
 
-            // If the bill is paid, mark the payee and add the amount
-            if (isPaid.length) {
-                payeeData.isPaid = true;
-                data.stats.amountPaid += isPaid.reduce((acc, payment) => acc + payment.amount, 0);
+            if( (eventDate.isAfter(new Moment(payees[i].ref)) || eventDate.isSame(new Moment(payees[i].ref)) ) && (payees[i].active || isPaid.length) ){
+
+                // Stub out the payment information for the page
+                let payeeData = {
+                    id: payees[i].id,
+                    date: eventDate,
+                    name: payees[i].name,
+                    url: payees[i].url,
+                    description: payees[i].description,
+                    amount: payees[i].amount,
+                    apr: payees[i].apr,
+                    autopay: payees[i].autopay,
+                    currentWeek: eventDate.isBetween(ts, te) ? true : false,
+                    isToday: eventDate.startOf('day').isSame(new Moment().startOf('day')) ? true : false,
+                    isPaid: false
+                };
+
+                // If the bill is paid, mark the payee and add the amount
+                if (isPaid.length) {
+                    payeeData.isPaid = true;
+                    data.stats.amountPaid += isPaid.reduce((acc, payment) => acc + payment.amount, 0);
+                }
+
+                // Build calculated daily expenditure amounts graph data
+                data.graph.calculated[eventDate.format("D") - 1] += payees[i].amount;
+
+                // Push the current payee info into the payee array
+                data.payees.push(payeeData);
             }
 
-            // Build calculated daily expenditure amounts graph data
-            data.graph.calculated[eventDate.format("D") - 1] += payees[i].amount;
-
-            // Push the current payee info into the payee array
-            data.payees.push(payeeData);
         }
 
         data.stats.amountRemaining = data.stats.monthlyTotal ? data.stats.monthlyTotal - data.stats.amountPaid : 0;
