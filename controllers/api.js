@@ -15,6 +15,8 @@ exports.getPayees = async (req, res) => {
 exports.getPayee = async (req, res) => {
     return Payee.findOne({ owner: req.params.userid, _id: req.params.payeeid })
         .then(payee => {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "X-Requested-With");
             res.json(payee);
         })
 };
@@ -24,6 +26,8 @@ exports.getPayments = async (req, res) => {
         .sort({ ref: -1 })
         .cache(0, req.params.userid + "__payments")
         .then(payments => {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "X-Requested-With");
             res.json(payments);
         })
 }
@@ -32,6 +36,8 @@ exports.getPayeePayments = async (req, res) => {
     return Payments.find({ owner: req.params.userid, payee: req.params.payeeid })
         .sort({ ref: -1 })
         .then(payments => {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "X-Requested-With");
             res.json(payments);
         });
 };
