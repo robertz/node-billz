@@ -84,3 +84,14 @@ exports.getView = async (req, res) => {
     }
 
 };
+
+exports.getVue = async (req, res) => {
+    let data = {
+        userid: req.user.id
+    }
+
+    res.render('payments/vue', {
+        title: 'Payments Test',
+        data: data
+    })
+};

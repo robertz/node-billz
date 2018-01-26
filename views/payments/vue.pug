@@ -1,0 +1,12 @@
+extends ../layout
+
+block content
+    div(id="app")
+        div(id="table-wrapper")
+            vuetable(ref="vuetable" :api-url="apiUrl" :fields="fields" @vuetable:pagination-data="onPaginationData" :css="css.table" :per-page="10")
+            vuetable-pagination(ref="pagination" :css="css.pagination" @vuetable-pagination:change-page="onChangePage")
+    script.
+        window.kdfe = !{JSON.stringify(data)};
+    script(src="//cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js")
+    script(src="//unpkg.com/vuetable-2@1.7.2/dist/vuetable-2.js")
+    script(src="/js/payments-vue.js")

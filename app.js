@@ -172,6 +172,8 @@ app.get("/api/user/:userid/payee/:payeeid", cors(), apiController.getPayee);
 app.get('/api/user/:userid/payments', cors(), apiController.getPayments);
 app.get('/api/user/:userid/payments/:payeeid', cors(), apiController.getPayeePayments);
 
+app.get('/api/user/:userid/pay', cors(), apiController.getPaymentsVue);
+
 /**
  * node-billz specific routes
  */
@@ -195,6 +197,7 @@ app.get('/month', passportConfig.isAuthenticated, monthController.getIndex);
 // payment related routes
 app.get('/payment', passportConfig.isAuthenticated, paymentController.getView);
 app.get('/payment/page/:page', passportConfig.isAuthenticated, paymentController.getView);
+app.get('/payment/vue', passportConfig.isAuthenticated, paymentController.getVue);
 /**
  * OAuth authentication routes. (Sign in)
  */
