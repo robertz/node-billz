@@ -8,6 +8,8 @@ const _ = require("lodash");
 // Forecast a week
 exports.forecastWeek = async (userid, offset, dt) => {
 
+    console.log(`offset: ${offset}`)
+    
     const getPayees = () => {
         return Payee.find({ owner: userid })
             .sort({ day: 1 })
@@ -140,6 +142,6 @@ exports.forecastWeek = async (userid, offset, dt) => {
     }
     
     // Dates do not always sort correctly. Fix fix the issue
-    template.stats.payees = _.sortBy(template.stats.payees, (payee) => {return new Moment(payee.date);});
+    template.payees = _.sortBy(template.payees, (payee) => {return new Moment(payee.date);});
     return template;
 };
