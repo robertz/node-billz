@@ -72,7 +72,7 @@ exports.getPaymentsVue = async (req, res) => {
         let totalPayments = await getTotalPayments();
 
         let __page = req.query.page * 1 || 1;
-        let __per_page = req.query.per_page * 1 || 10
+        let __per_page = req.query.per_page * 1 || 25
 
         // Stub out the page payload
         let data = {
@@ -95,10 +95,10 @@ exports.getPaymentsVue = async (req, res) => {
         data.links.pagination.from = (__page - 1) * __per_page + 1;
 
         if(__page > 1) {
-            data.links.pagination.prev_page_url = '/api/user/' + req.params.userid + '/pay?page=' +  (__page - 1);
+            data.links.pagination.prev_page_url = '/api/user/' + req.params.userid + '/payments/vue?page=' +  (__page - 1);
         }
         if(__page < data.links.pagination.last_page) {
-            data.links.pagination.next_page_url = '/api/user/' + req.params.userid + '/pay?page=' +  (__page + 1);
+            data.links.pagination.next_page_url = '/api/user/' + req.params.userid + '/payments/vue?page=' +  (__page + 1);
         }
 
         let page_to = data.links.pagination.from + data.links.pagination.per_page - 1;
@@ -116,9 +116,9 @@ exports.getPaymentsVue = async (req, res) => {
             data.data.push({
                 name: payeeName[0].name,
                 payee: payment.payee,
-                ref: new Moment(payment.ref).format('MM/DD/YYYY'),
-                createdAt: new Moment(payment.createdAt).format('MM/DD/YYYY'),
-                amount: formatCurrency(payment.amount, {format: '%s%v', code: 'USD', symbol: '$'})
+                ref: payment.ref,
+                createdAt: payment.createdAt,
+                amount: payment.amount
             });
         }
 

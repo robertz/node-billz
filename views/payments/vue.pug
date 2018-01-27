@@ -1,12 +1,19 @@
 extends ../layout
 
 block content
+
+    h5 Payment History
+
     div(id="app")
         div(id="table-wrapper")
-            vuetable(ref="vuetable" :api-url="apiUrl" :fields="fields" @vuetable:pagination-data="onPaginationData" :css="css.table" :per-page="10")
-            vuetable-pagination(ref="pagination" :css="css.pagination" @vuetable-pagination:change-page="onChangePage")
+            vuetable(ref="vuetable" :api-url="apiUrl" :fields="fields" @vuetable:pagination-data="onPaginationData" :css="css.table" :per-page="15")
+            .vuetable-pagination
+                vuetable-pagination-info(ref="paginationInfo" style="float: left; font-weight: 500;")
+                vuetable-pagination(ref="pagination" :css="css.pagination" @vuetable-pagination:change-page="onChangePage")
+    
     script.
         window.kdfe = !{JSON.stringify(data)};
     script(src="//cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js")
     script(src="//unpkg.com/vuetable-2@1.7.2/dist/vuetable-2.js")
+    script(src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js")
     script(src="/js/payments-vue.js")

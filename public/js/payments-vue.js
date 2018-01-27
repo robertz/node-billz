@@ -3,11 +3,29 @@ Vue.use(Vuetable);
 new Vue({
   el: "#app",
   components: {
-    "vuetable-pagination": Vuetable.VuetablePagination
+    "vuetable-pagination": Vuetable.VuetablePagination,
+    "vuetable-pagination-info": Vuetable.VuetablePaginationInfo
   },
   data: {
-    fields: ["name", "ref", "createdAt", "amount"],
-    apiUrl: '/api/user/' + window.kdfe.userid +'/pay',
+    hasPayments: false,
+    fields: [
+        "name", 
+        {
+            name: 'ref',
+            title: 'Due',
+            callback: 'formatDate'
+        }, 
+        {
+            name: 'createdAt',
+            title: 'Paid',
+            callback: 'formatDate'
+        }, 
+        {
+            name: 'amount',
+            callback: 'formatCurrency'
+        }
+    ],
+    apiUrl: '/api/user/' + window.kdfe.userid +'/paymentvue',
     sortOrder: [{ field: "name", direction: "asc" }],
     css: {
       table: {
@@ -39,17 +57,21 @@ new Vue({
   },*/
   },
   methods: {
+    formatDate(value, fmt) {
+      if (value == null) return ''
+      fmt = (typeof fmt == 'undefined') ? 'D MMM YYYY' : fmt
+      return moment(value, 'YYYY-MM-DD').format(fmt)
+    },
+    formatCurrency(value) {
+      return '$' + value.toFixed(2);
+    },
     onPaginationData(paginationData) {
-      this.$refs.pagination.setPaginationData(paginationData);
+        this.hasPayments = paginationData.total > 0 ? true : false
+        this.$refs.pagination.setPaginationData(paginationData);
+        this.$refs.paginationInfo.setPaginationData(paginationData);
     },
     onChangePage(page) {
       this.$refs.vuetable.changePage(page);
-    },
-    editRow(rowData) {
-      alert("You clicked edit on" + JSON.stringify(rowData));
-    },
-    deleteRow(rowData) {
-      alert("You clicked delete on" + JSON.stringify(rowData));
     },
     onLoading() {
       console.log("loading... show your spinner here");
