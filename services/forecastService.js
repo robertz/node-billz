@@ -8,8 +8,6 @@ const _ = require("lodash");
 // Forecast a week
 exports.forecastWeek = async (userid, offset, dt) => {
 
-    console.log(`offset: ${offset}`)
-    
     const getPayees = () => {
         return Payee.find({ owner: userid })
             .sort({ day: 1 })
