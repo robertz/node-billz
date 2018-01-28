@@ -1,60 +1,65 @@
 extends ../layout
 
 block content
-    .row(style='margin-bottom: 24px;')
-        .col-xs-6 
-            a.btn.btn-primary(href='/forecast?dt=' + previousWeek, style='width: 150px;') <i class="fa fa-arrow-left"></i> Previous
-        .col-xs-6
-            .pull-right
-                a.btn.btn-primary(href='/forecast?dt=' + nextWeek, style='width: 150px;') Next <i class="fa fa-arrow-right"></i>
-    div
-        for week in weeks
-            .panel.panel-primary
-                .panel-heading
-                    | #{moment(week.start).format('dddd, M/D/YYYY')} - #{moment(week.end).format('dddd, M/D/YYYY')}
-                .panel-body
-                    .row
-                        .col-xs-6.col-sm-4
-                            small(style='font-variant: small-caps;') Amount Due
-                            h4 $#{formatCurrency(week.amountDue)}
-                            small #{week.percentMonth.toLocaleString('en-US')}% of month
-                        .col-xs-6.col-sm-4
-                            small(style='font-variant: small-caps;') Amount Paid
-                            h4 $#{formatCurrency(week.amountPaid)}
-                            small #{week.percentWeek.toLocaleString('en-US')}% of week
-                        .col-xs-6.col-sm-4
-                            small(style='font-variant: small-caps;') Amount Remaining
-                            h4 $#{formatCurrency(week.amountRemain)}
-                            small #{week.percentRemain.toLocaleString('en-US')}% of week
-                if week.dailyGraph
-                    .row.hidden-xs
-                        .col-xs-12
-                            canvas(id='myChart' height='50px')
-                table.table.table-striped
-                    thead
-                        tr
-                            th(width='20%') Date
-                            th Name
-                            th.hidden-xs(width='10%') APR %
-                            th(width='10%') Mark Paid
-                    for payee in week.payees
-                        tr
-                            td #{moment(payee.date).format('dddd, M/D/YYYY')}
-                            td #{payee.name}
-                                if (payee.url)
-                                    |    
-                                    a(href=payee.url target='_blank') <i class="fa fa-external-link"></i>
-                                if payee.autopay
-                                    | 
-                                    i(class='fa fa-refresh' style='color: #4d90fc;')
-                                br
-                                small #{payee.description}
-                            td.hidden-xs #{payee.apr ? payee.apr.toFixed(2) : ''}
-                            td 
-                                if payee.isPaid == false
-                                    a.btn.btn-warning(style='width: 100%' href='/payee/view/' + payee.id + '?dt=' + moment(payee.date).format('YYYY-MM-DD')) #{formatCurrency(payee.amount, {format: '%s%v', code: 'USD', symbol: '$'})}
-                                else
-                                    a.btn.btn-success(style='width: 100%' href='/payee/view/' + payee.id) Paid
+
+    if weeks[0].hasPayees
+        .row(style='margin-bottom: 24px;')
+            .col-xs-6 
+                a.btn.btn-primary(href='/forecast?dt=' + moment(weeks[0].timing.startOfWeek).subtract(1, 'week').format('YYYY-MM-DD'), style='width: 150px;') <i class="fa fa-arrow-left"></i> Previous
+            .col-xs-6
+                .pull-right
+                    a.btn.btn-primary(href='/forecast?dt=' + moment(weeks[0].timing.endOfWeek).add(1, 'day').format('YYYY-MM-DD'), style='width: 150px;') Next <i class="fa fa-arrow-right"></i>
+        div
+            for week in weeks
+                .panel.panel-primary
+                    .panel-heading
+                        | #{moment(week.timing.startOfWeek).format('dddd, M/D/YYYY')} - #{moment(week.timing.endOfWeek).format('dddd, M/D/YYYY')}
+                    .panel-body
+                        .row
+                            .col-xs-6.col-sm-4
+                                small(style='font-variant: small-caps;') Amount Due
+                                h4 $#{formatCurrency(week.stats.amountDue)}
+                                small #{week.stats.percentMonth.toLocaleString('en-US')}% of month
+                            .col-xs-6.col-sm-4
+                                small(style='font-variant: small-caps;') Amount Paid
+                                h4 $#{formatCurrency(week.stats.amountPaid)}
+                                small #{week.stats.percentWeek.toLocaleString('en-US')}% of week
+                            .col-xs-6.col-sm-4
+                                small(style='font-variant: small-caps;') Amount Remaining
+                                h4 $#{formatCurrency(week.stats.amountRemain)}
+                                small #{week.stats.percentRemain.toLocaleString('en-US')}% of week
+                    if week.graph.dailyGraph
+                        .row.hidden-xs
+                            .col-xs-12
+                                canvas(id='myChart' height='50px')
+                    table.table.table-striped
+                        thead
+                            tr
+                                th(width='20%') Date
+                                th Name
+                                th.hidden-xs(width='10%') APR %
+                                th(width='10%') Mark Paid
+                        for payee in week.payees
+                            tr
+                                td #{moment(payee.date).format('dddd, M/D/YYYY')}
+                                td #{payee.name}
+                                    if (payee.url)
+                                        |    
+                                        a(href=payee.url target='_blank') <i class="fa fa-external-link"></i>
+                                    if payee.autopay
+                                        | 
+                                        i(class='fa fa-refresh' style='color: #4d90fc;')
+                                    br
+                                    small #{payee.description}
+                                td.hidden-xs #{payee.apr ? payee.apr.toFixed(2) : ''}
+                                td 
+                                    if payee.isPaid == false
+                                        a.btn.btn-warning(style='width: 100%' href='/payee/view/' + payee.id + '?dt=' + moment(payee.date).format('YYYY-MM-DD')) #{formatCurrency(payee.amount, {format: '%s%v', code: 'USD', symbol: '$'})}
+                                    else
+                                        a.btn.btn-success(style='width: 100%' href='/payee/view/' + payee.id) Paid
+    else
+        h3 You do not have any payees
+        p Add some payees and lets get started!
 
     script(src='/js/Chart.min.js')
     script.
@@ -71,19 +76,19 @@ block content
         var myChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: [#{weeks[0].dailyOrder}],
+                labels: [#{weeks[0].graph.dailyOrder}],
                 datasets: [
                     {
                         label: 'Actual per Day',
                         fill: true,
-                        data: #{JSON.stringify(weeks[0].dailyActual)},
+                        data: #{JSON.stringify(weeks[0].graph.dailyActual)},
                         backgroundColor: "rgba(255, 99, 132, 0.5)",
                         borderColor: window.chartColors.red
                     },
                     {
                         label: 'Calculated per Day',
                         fill: true,
-                        data: #{JSON.stringify(weeks[0].dailyCalculated)},
+                        data: #{JSON.stringify(weeks[0].graph.dailyCalculated)},
                         backgroundColor: "rgba(75, 192, 192, 0.5)",
                         borderColor: window.chartColors.green
                     }
