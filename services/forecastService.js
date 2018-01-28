@@ -60,7 +60,8 @@ exports.forecastWeek = async (userid, offset, dt) => {
             dailyActual: [0, 0, 0, 0, 0, 0, 0],
             dailyOrder: []
         },
-        payees: []
+        payees: [],
+        hasPayees: payees.length ? true : false
     };
 
     for( let d = 0; d < 7; d++) {
@@ -190,7 +191,8 @@ exports.forecastMonth = async (userid, offset, dt) => {
         },
         payees: [],
         nextMonth: null,
-        prevMonth: null
+        prevMonth: null,
+        hasPayees: payees.length ? true : false
     };
 
     // Calculate the range for the current week
