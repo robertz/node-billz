@@ -47,6 +47,12 @@ block content
             option(value=5 selected=user.offset==5) Friday
             option(value=6 selected=user.offset==6) Saturday
     .form-group
+      label.col-sm-3.control-label(for='tz') Timezone
+      .col-sm-7
+        select.form-control(name='tz', id='tz')
+            for zone in tzdata
+                option(value=zone selected=user.tz === zone) #{zone}
+    .form-group
       label.col-sm-3.control-label Gravatar
       .col-sm-4
         img(src=user.gravatar(), class='profile', width='100', height='100')

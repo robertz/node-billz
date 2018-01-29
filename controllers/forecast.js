@@ -7,8 +7,8 @@ exports.getIndex = async (req, res) => {
 
     try {
         // if dt is passed in the url attempt to set the date
-        let ref = new Moment();
-        if (new Moment(req.query.dt).isValid()) ref = new Moment(req.query.dt);
+        let ref = new Moment().tz(req.user.tz);
+        if (new Moment(req.query.dt).isValid()) ref = new Moment(req.query.dt).tz(req.user.tz);
 
         let weekly = [];
         for (let otr = 0; otr < 4; otr++) {

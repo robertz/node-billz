@@ -3,6 +3,7 @@ const crypto = bluebird.promisifyAll(require('crypto'));
 const nodemailer = require('nodemailer');
 const passport = require('passport');
 const User = require('../models/User');
+const Moment = require('moment-timezone');
 
 /**
  * GET /login
@@ -115,7 +116,8 @@ exports.postSignup = (req, res, next) => {
  */
 exports.getAccount = (req, res) => {
   res.render('account/profile', {
-    title: 'Account Management'
+    title: 'Account Management',
+    tzdata: Moment.tz.names()
   });
 };
 
@@ -142,6 +144,7 @@ exports.postUpdateProfile = (req, res, next) => {
     user.profile.location = req.body.location || '';
     user.profile.website = req.body.website || '';
     user.offset = req.body.offset || 0;
+    user.tz = req.body.rz || 'America/New_York';
     user.save((err) => {
       if (err) {
         if (err.code === 11000) {
