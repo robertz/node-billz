@@ -71,7 +71,7 @@ exports.forecastWeek = async (userid, offset, tz, dt) => {
     for (let i = 0; i < payees.length; i++) {
         // How many months to add to bring the reference date to the current month
         let diff = new Moment(ref).diff(payees[i].ref, "months");
-        let eventDate = new Moment(payees[i].ref).add(diff, "months");
+        let eventDate = new Moment(payees[i].ref).tz(tz).add(diff, "months");
         if (eventDate.isBefore(startOfWeek)) {
             eventDate.add(1, "month");
         }
@@ -141,7 +141,7 @@ exports.forecastWeek = async (userid, offset, tz, dt) => {
     }
     
     // Dates do not always sort correctly. Fix fix the issue
-    data.payees = _.sortBy(data.payees, (payee) => {return new Moment(payee.date);});
+    data.payees = _.sortBy(data.payees, (payee) => {return new Moment(payee.date).tz(tz);});
     return data;
 };
 
@@ -197,9 +197,9 @@ exports.forecastMonth = async (userid, offset, tz, dt) => {
 
     // Calculate the range for the current week
     // adjust the start of the week to the user offset.. 0 = Sunday 6 = Saturday
-    data.timing.startOfWeek = new Moment().startOf('week').subtract(7 - offset, 'days');
+    data.timing.startOfWeek = new Moment().tz(tz).startOf('week').subtract(7 - offset, 'days');
     // Compensate for offset logic going too far back
-    if (new Moment().diff(data.timing.startOfWeek, 'days') >= 7) {
+    if (new Moment().tz(tz).diff(data.timing.startOfWeek, 'days') >= 7) {
         data.timing.startOfWeek.add(7, 'days');
     }
     data.timing.endOfWeek = new Moment(data.timing.startOfWeek).add(6, 'days');
@@ -261,7 +261,7 @@ exports.forecastMonth = async (userid, offset, tz, dt) => {
                 apr: payees[i].apr,
                 autopay: payees[i].autopay,
                 currentWeek: eventDate.isBetween(ts, te) ? true : false,
-                isToday: eventDate.startOf('day').isSame(new Moment().startOf('day')) ? true : false,
+                isToday: eventDate.startOf('day').isSame(new Moment().tz(tz).startOf('day')) ? true : false,
                 isPaid: false
             };
 
