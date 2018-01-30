@@ -6,7 +6,7 @@ const Moment = require("moment-timezone");
 const _ = require("lodash");
 
 // Forecast a week
-exports.forecastWeek = async (userid, offset, dt) => {
+exports.forecastWeek = async (userid, offset, tz, dt) => {
 
     const getPayees = () => {
         return Payee.find({ owner: userid })
@@ -89,7 +89,7 @@ exports.forecastWeek = async (userid, offset, dt) => {
             // there is a payment for the current period. Payee data may be required for 
             // historical reasons
 
-            if( (eventDate.isAfter(new Moment(payees[i].ref)) || eventDate.isSame(new Moment(payees[i].ref)) ) && (payees[i].active || isPaid.length) ){
+            if( (eventDate.isAfter(new Moment(payees[i].ref).tz(tz)) || eventDate.isSame(new Moment(payees[i].ref).tz(tz)) ) && (payees[i].active || isPaid.length) ){
 
                 // Stub out the payment information for the page
                 let payeeData = { 
@@ -146,7 +146,7 @@ exports.forecastWeek = async (userid, offset, dt) => {
 };
 
 // Forecast a month
-exports.forecastMonth = async (userid, offset, dt) => {
+exports.forecastMonth = async (userid, offset, tz, dt) => {
 
     const getPayees = () => {
         return Payee.find({ owner: userid })
@@ -226,7 +226,7 @@ exports.forecastMonth = async (userid, offset, dt) => {
     }
     // Build actual daily expenditure amounts for graph
     for (let payment of monthlyPayments) {
-        let ndx = new Moment(payment.ref).format("D") - 1;
+        let ndx = new Moment(payment.ref).tz(tz).format("D") - 1;
         data.graph.actual[ndx] += payment.amount;
     }
 
@@ -234,7 +234,7 @@ exports.forecastMonth = async (userid, offset, dt) => {
 
         // How many months to add to bring the reference date to the current month
         let diff = new Moment(dt).diff(payees[i].ref, 'months');
-        let eventDate = new Moment(payees[i].ref).add(diff, 'months');
+        let eventDate = new Moment(payees[i].ref).tz(tz).add(diff, 'months');
         if (eventDate.isBefore(data.timing.startOfMonth)) {
             eventDate.add(1, 'month');
         }
@@ -248,7 +248,7 @@ exports.forecastMonth = async (userid, offset, dt) => {
         // there is a payment for the current period. Payee data may be required for 
         // historical reasons
 
-        if( (eventDate.isAfter(new Moment(payees[i].ref)) || eventDate.isSame(new Moment(payees[i].ref)) ) && (payees[i].active || isPaid.length) ){
+        if( (eventDate.isAfter(new Moment(payees[i].ref).tz(tz)) || eventDate.isSame(new Moment(payees[i].ref).tz(tz)) ) && (payees[i].active || isPaid.length) ){
 
             // Stub out the payment information for the page
             let payeeData = {

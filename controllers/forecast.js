@@ -14,7 +14,7 @@ exports.getIndex = async (req, res) => {
         for (let otr = 0; otr < 4; otr++) {
             // Add 1 week to the reference date if it is not the initial week
             if (otr) ref.add(1, "week");
-            weekly.push(await forecastService.forecastWeek(req.user.id, req.user.offset, ref));
+            weekly.push(await forecastService.forecastWeek(req.user.id, req.user.offset, req.user.tz, ref));
         }
         // display graph for the first week
         weekly[0].graph.dailyGraph = true;

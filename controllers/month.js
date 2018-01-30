@@ -11,7 +11,7 @@ exports.getIndex = async (req, res) => {
         let ref = new Moment().tz(req.user.tz);
         if (new Moment(req.query.dt).isValid()) ref = new Moment(req.query.dt).tz(req.user.tz);
 
-        let data = await forecastService.forecastMonth(req.user.id, req.user.offset, ref);
+        let data = await forecastService.forecastMonth(req.user.id, req.user.offset, req.user.tz, ref);
 
         // Render it
         res.render('month/index', {

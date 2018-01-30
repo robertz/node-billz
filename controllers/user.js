@@ -144,7 +144,7 @@ exports.postUpdateProfile = (req, res, next) => {
     user.profile.location = req.body.location || '';
     user.profile.website = req.body.website || '';
     user.offset = req.body.offset || 0;
-    user.tz = req.body.rz || 'America/New_York';
+    user.tz = req.body.tz || 'America/New_York';
     user.save((err) => {
       if (err) {
         if (err.code === 11000) {
