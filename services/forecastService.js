@@ -49,9 +49,11 @@ exports.forecastWeek = async (userid, offset, tz, dt) => {
             amountDue: 0,
             amountPaid: 0,
             amountRemaining: 0,
+            amountCredit: 0,
             percentMonth: 0,
             percentWeek: 0,
             percentRemain: 0,
+            percentCredit: 0,
             monthlyTotal: payees.reduce((acc, payee) => acc + payee.amount, 0)
         },
         graph: {
@@ -116,6 +118,9 @@ exports.forecastWeek = async (userid, offset, tz, dt) => {
                     data.graph.dailyActual[ data.graph.dailyOrder.indexOf(eventDate.format('D')) ] += payeeAmount * 1;
                 }
 
+                if (payees[i].apr) {
+                    data.stats.amountCredit += payees[i].amount;
+                }
                 // Push the current payee info into the payee array
                 data.payees.push(payeeData);
                 data.stats.amountDue += payees[i].amount;
@@ -133,6 +138,8 @@ exports.forecastWeek = async (userid, offset, tz, dt) => {
 
     data.stats.amountRemain = data.stats.amountDue - data.stats.amountPaid;
     data.stats.percentRemain = data.stats.amountRemain / data.stats.amountDue * 100;
+
+    data.stats.percentCredit = data.stats.amountCredit / data.stats.amountDue * 100;
 
     // If amount remaining goes negative (paid over the monthly calculation)
     if (data.stats.amountRemain < 0) {
@@ -181,8 +188,10 @@ exports.forecastMonth = async (userid, offset, tz, dt) => {
             monthlyTotal: payees.reduce((acc, payee) => acc + payee.amount, 0),
             amountPaid: 0,
             amountRemaining: 0,
+            amountCredit: 0,
             pctPaid: 0,
-            pctRemain: 0
+            pctRemain: 0,
+            pctCredit: 0
         },
         graph: {
             labels: [],
@@ -218,6 +227,14 @@ exports.forecastMonth = async (userid, offset, tz, dt) => {
     let monthlyPayments = payments.filter((payment) => {
         return payment.ref.indexOf(new Moment(dt).format("YYYY-MM")) === 0 ? true : false;
     });
+
+    let creditAccounts = payees.filter(payee => {
+        return payee.apr ? true : false;
+    });
+
+    data.stats.amountCredit = creditAccounts.reduce((acc, payee) => acc + payee.amount, 0);
+    data.stats.pctCredit = data.stats.amountCredit / data.stats.monthlyTotal * 100;
+
     // Default graph values for the month
     for (let i = 0; i < data.timing.startOfMonth.daysInMonth(); i++) {
         data.graph.labels[i] = i + 1;

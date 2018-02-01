@@ -16,18 +16,22 @@ block content
                         | #{moment(week.timing.startOfWeek).format('dddd, M/D/YYYY')} - #{moment(week.timing.endOfWeek).format('dddd, M/D/YYYY')}
                     .panel-body
                         .row
-                            .col-xs-6.col-sm-4
+                            .col-xs-6.col-sm-3
                                 small(style='font-variant: small-caps;') Amount Due
                                 h4 $#{formatCurrency(week.stats.amountDue)}
                                 small #{week.stats.percentMonth.toLocaleString('en-US')}% of month
-                            .col-xs-6.col-sm-4
+                            .col-xs-6.col-sm-3
                                 small(style='font-variant: small-caps;') Amount Paid
                                 h4 $#{formatCurrency(week.stats.amountPaid)}
                                 small #{week.stats.percentWeek.toLocaleString('en-US')}% of week
-                            .col-xs-6.col-sm-4
+                            .col-xs-6.col-sm-3
                                 small(style='font-variant: small-caps;') Amount Remaining
                                 h4 $#{formatCurrency(week.stats.amountRemain)}
                                 small #{week.stats.percentRemain.toLocaleString('en-US')}% of week
+                            .col-xs-6.col-sm-3
+                                small(style='font-variant: small-caps;') Credit Accounts
+                                h4 $#{formatCurrency(week.stats.amountCredit)}
+                                small #{week.stats.percentCredit.toLocaleString('en-US')}% of week
                     if week.graph.dailyGraph
                         .row.hidden-xs
                             .col-xs-12
