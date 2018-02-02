@@ -30,6 +30,9 @@ exports.forecastWeek = async (userid, offset, tz, dt) => {
     let payments = await getPayments();
     let ref = new Moment(dt);
 
+    let activePayees = payees.filter((payee) => {
+        return payee.active === true;
+    })
     // adjust the start of the week to the user offset.. 0 = Sunday 6 = Saturday
     let startOfWeek = new Moment(ref).startOf("week").subtract(7 - offset, "days");
     // Compensate for offset logic going too far back
@@ -54,7 +57,7 @@ exports.forecastWeek = async (userid, offset, tz, dt) => {
             percentWeek: 0,
             percentRemain: 0,
             percentCredit: 0,
-            monthlyTotal: payees.reduce((acc, payee) => acc + payee.amount, 0)
+            monthlyTotal: activePayees.reduce((acc, payee) => acc + payee.amount, 0)
         },
         graph: {
             dailyGraph: false,
@@ -116,6 +119,10 @@ exports.forecastWeek = async (userid, offset, tz, dt) => {
                     data.stats.amountPaid += payeeAmount;
                     // Calculate the daily actual values
                     data.graph.dailyActual[ data.graph.dailyOrder.indexOf(eventDate.format('D')) ] += payeeAmount * 1;
+                    // If the payee is inactive and it's been paid add it to the monthly total
+                    if (payees[i].active === false) {
+                        data.stats.monthlyTotal += payeeAmount;
+                    }
                 }
 
                 if (payees[i].apr) {
@@ -174,6 +181,11 @@ exports.forecastMonth = async (userid, offset, tz, dt) => {
     };
 
     let payees = await getPayees();
+
+    let activePayees = payees.filter((payee) => {
+        return payee.active === true;
+    })
+
     let payments = await getPayments();
 
     // Stub out the payload for the page
@@ -185,7 +197,7 @@ exports.forecastMonth = async (userid, offset, tz, dt) => {
             endOfMonth: null
         },
         stats: {
-            monthlyTotal: payees.reduce((acc, payee) => acc + payee.amount, 0),
+            monthlyTotal: activePayees.reduce((acc, payee) => acc + payee.amount, 0),
             amountPaid: 0,
             amountRemaining: 0,
             amountCredit: 0,
@@ -285,7 +297,14 @@ exports.forecastMonth = async (userid, offset, tz, dt) => {
             // If the bill is paid, mark the payee and add the amount
             if (isPaid.length) {
                 payeeData.isPaid = true;
-                data.stats.amountPaid += isPaid.reduce((acc, payment) => acc + payment.amount, 0);
+
+                let payeeTotal = isPaid.reduce((acc, payment) => acc + payment.amount, 0);
+
+                data.stats.amountPaid += payeeTotal;
+                // If the payee is inactive and it's been paid add it to the monthly total
+                if (payees[i].active === false) { 
+                    data.stats.monthlyTotal += payeeTotal;
+                }
             }
 
             // Build calculated daily expenditure amounts graph data
