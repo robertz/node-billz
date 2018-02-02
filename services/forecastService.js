@@ -115,17 +115,18 @@ exports.forecastWeek = async (userid, offset, tz, dt) => {
                 // If the bill is paid, mark the payee and add the amount
                 if (isPaid.length) {
                     payeeData.isPaid = true;
-                    let payeeAmount = isPaid.reduce((acc, payment) => acc + payment.amount, 0).toFixed(2) * 1;
+                    let payeeAmount = isPaid.reduce((acc, payment) => acc + payment.amount, 0);
                     data.stats.amountPaid += payeeAmount;
                     // Calculate the daily actual values
                     data.graph.dailyActual[ data.graph.dailyOrder.indexOf(eventDate.format('D')) ] += payeeAmount * 1;
                     // If the payee is inactive and it's been paid add it to the monthly total
-                    if (payees[i].active === false) {
-                        data.stats.monthlyTotal += payeeAmount;
+                    data.stats.monthlyTotal += payeeAmount;
+                    if (payees[i].apr) {
+                        data.stats.amountCredit += payeeAmount;
                     }
                 }
 
-                if (payees[i].apr) {
+                if (payees[i].apr && !isPaid.length) {
                     data.stats.amountCredit += payees[i].amount;
                 }
                 // Push the current payee info into the payee array
