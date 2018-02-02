@@ -240,7 +240,7 @@ exports.forecastMonth = async (userid, offset, tz, dt) => {
         return payment.ref.indexOf(new Moment(dt).format("YYYY-MM")) === 0 ? true : false;
     });
 
-    let creditAccounts = payees.filter(payee => {
+    let creditAccounts = activePayees.filter(payee => {
         return payee.apr ? true : false;
     });
 
@@ -304,7 +304,12 @@ exports.forecastMonth = async (userid, offset, tz, dt) => {
                 // If the payee is inactive and it's been paid add it to the monthly total
                 if (payees[i].active === false) { 
                     data.stats.monthlyTotal += payeeTotal;
+
+                    if (payees[i].apr) {
+                        data.stats.amountCredit += payeeTotal;
+                    }
                 }
+
             }
 
             // Build calculated daily expenditure amounts graph data
