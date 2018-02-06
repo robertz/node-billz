@@ -246,7 +246,6 @@ exports.forecastMonth = async (userid, offset, tz, dt) => {
     });
 
     data.stats.amountCredit = creditAccounts.reduce((acc, payee) => acc + payee.amount, 0);
-    data.stats.pctCredit = data.stats.amountCredit / data.stats.monthlyTotal * 100;
 
     // Default graph values for the month
     for (let i = 0; i < data.timing.startOfMonth.daysInMonth(); i++) {
@@ -327,6 +326,8 @@ exports.forecastMonth = async (userid, offset, tz, dt) => {
     data.stats.pctPaid = data.stats.monthlyTotal ? (data.stats.amountPaid / data.stats.monthlyTotal) * 100 : 0;
     data.stats.pctRemain = data.stats.monthlyTotal ? (data.stats.amountRemaining / data.stats.monthlyTotal) * 100 : 0;
 
+    data.stats.pctCredit = data.stats.amountCredit / data.stats.monthlyTotal * 100;
+    
     // If amount remaining goes negative (paid over the monthly calculation) 
     if (data.stats.amountRemaining < 0) {
         data.stats.amountRemaining = 0;
