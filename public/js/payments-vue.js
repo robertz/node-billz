@@ -1,10 +1,22 @@
 const app = new Vue({
     el: "#app",
     data: {
-        payments: kdfe.user.payments,
-        payees: kdfe.user.payees,
+        payments: [],
+        payees: [],
         pageSize: 10,
         currentPage: 1
+    },
+    created: function() {
+        fetch('/api/user/' + kdfe.userid + '/payees')
+            .then(res => res.json())
+            .then(res => {
+                this.payees = res;
+            });
+        fetch('/api/user/' + kdfe.userid + '/payments')
+            .then(res => res.json())
+            .then(res => {
+                this.payments = res;
+            });
     },
     methods: {
         nextPage: function () {
@@ -28,12 +40,13 @@ const app = new Vue({
             let startRecord = (this.currentPage - 1) * this.pageSize + 1;
             let endRecord = startRecord + this.pageSize - 1;
             endRecord = endRecord > this.payments.length ? this.payments.length : endRecord;
-            return 'Displaying ' + startRecord + ' through ' + endRecord + ' of ' + this.payments.length + ' records.';
+            return 'Displaying records ' + startRecord + ' through ' + endRecord + ' of ' + this.payments.length;
         }
     },
     filters: {
-        payee: function (value) {
-            let payeeData = kdfe.user.payees.filter(payee => {
+        payee: function (value, payees) {
+            // The _this_ scope is not available, payee list has to be passed in as an argument
+            let payeeData = payees.filter(payee => {
                 return payee._id == value;
             });
             return payeeData[0].name;

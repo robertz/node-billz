@@ -15,7 +15,7 @@ block content
                         th Amount
                 tbody
                     tr(v-for="payment in sortedPayments")
-                        td {{ payment.payee | payee }}
+                        td {{ payment.payee | payee(payees) }}
                         td {{ payment.ref | dateFormat }}
                         td {{ payment.createdAt | dateFormat }}
                         td {{ payment.amount | currencyFormat }}
