@@ -6,14 +6,30 @@ block content
 
     div(id="app")
         div(id="table-wrapper")
-            vuetable(ref="vuetable" :api-url="apiUrl" :fields="fields" @vuetable:pagination-data="onPaginationData" :css="css.table" :per-page="10")
-            .vuetable-pagination
-                vuetable-pagination-info(ref="paginationInfo" style="float: left; font-weight: 500;")
-                vuetable-pagination(ref="pagination" :css="css.pagination" @vuetable-pagination:change-page="onChangePage")
-    
+            table.table.table-striped
+                thead
+                    tr
+                        th Name
+                        th Due
+                        th Paid
+                        th Amount
+                tbody
+                    tr(v-for="payment in sortedPayments")
+                        td {{ payment.payee | payee }}
+                        td {{ payment.ref | dateFormat }}
+                        td {{ payment.createdAt | dateFormat }}
+                        td {{ payment.amount | currencyFormat }}
+            div
+                span(class="pull-left" style="margin-tip: 8px; font-weight: 700;")
+                    | {{ pageInfo }}
+                span(class="pull-right")
+                    button.btn(@click="prevPage" style="width: 75px;") Previous
+                    |
+                    |
+                    button.btn(@click="nextPage" style="width: 75px;") Next
+
     script.
         window.kdfe = !{JSON.stringify(data)};
     script(src="//cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js")
-    script(src="//unpkg.com/vuetable-2@1.7.2/dist/vuetable-2.js")
     script(src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js")
     script(src="/js/payments-vue.js")

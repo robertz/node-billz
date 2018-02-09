@@ -1,83 +1,48 @@
-Vue.use(Vuetable);
-
-new Vue({
-  el: "#app",
-  components: {
-    "vuetable-pagination": Vuetable.VuetablePagination,
-    "vuetable-pagination-info": Vuetable.VuetablePaginationInfo
-  },
-  data: {
-    hasPayments: false,
-    fields: [
-        "name", 
-        {
-            name: 'ref',
-            title: 'Due',
-            callback: 'formatDate'
-        }, 
-        {
-            name: 'createdAt',
-            title: 'Paid',
-            callback: 'formatDate'
-        }, 
-        {
-            name: 'amount',
-            callback: 'formatCurrency'
+const app = new Vue({
+    el: "#app",
+    data: {
+        payments: kdfe.user.payments,
+        payees: kdfe.user.payees,
+        pageSize: 10,
+        currentPage: 1
+    },
+    methods: {
+        nextPage: function () {
+            if (this.currentPage * this.pageSize < this.payments.length)
+                this.currentPage++;
+        },
+        prevPage: function () {
+            if (this.currentPage > 1) this.currentPage--;
         }
-    ],
-    apiUrl: '/api/user/' + window.kdfe.userid +'/paymentvue',
-    sortOrder: [{ field: "name", direction: "asc" }],
-    css: {
-      table: {
-        tableClass: "table table-striped table-bordered table-hovered",
-        loadingClass: "loading",
-        ascendingIcon: "glyphicon glyphicon-chevron-up",
-        descendingIcon: "glyphicon glyphicon-chevron-down",
-        handleIcon: "glyphicon glyphicon-menu-hamburger"
-      },
-      pagination: {
-        infoClass: "pull-left",
-        wrapperClass: "vuetable-pagination pull-right",
-        activeClass: "btn-primary",
-        disabledClass: "disabled",
-        pageClass: "btn",
-        linkClass: "btn",
-        icons: {
-          first: "",
-          prev: "",
-          next: "",
-          last: ""
+    },
+    computed: {
+        sortedPayments: function () {
+            return this.payments
+                .filter((row, index) => {
+                    let start = (this.currentPage - 1) * this.pageSize;
+                    let end = this.currentPage * this.pageSize;
+                    if (index >= start && index < end) return true;
+                });
+        },
+        pageInfo: function () {
+            let startRecord = (this.currentPage - 1) * this.pageSize + 1;
+            let endRecord = startRecord + this.pageSize - 1;
+            endRecord = endRecord > this.payments.length ? this.payments.length : endRecord;
+            return 'Displaying ' + startRecord + ' through ' + endRecord + ' of ' + this.payments.length + ' records.';
         }
-      }
+    },
+    filters: {
+        payee: function (value) {
+            let payeeData = kdfe.user.payees.filter(payee => {
+                return payee._id == value;
+            });
+            return payeeData[0].name;
+        },
+        dateFormat: function (value) {
+            return moment(value).format("D MMM YYYY");
+        },
+        currencyFormat: function (value) {
+            return '$' + value.toFixed(2);
+        }
     }
-  },
-  computed: {
-    /*httpOptions(){
-    return {headers: {'Authorization': "my-token"}} //table props -> :http-options="httpOptions"
-  },*/
-  },
-  methods: {
-    formatDate(value, fmt) {
-      if (value == null) return ''
-      fmt = (typeof fmt == 'undefined') ? 'D MMM YYYY' : fmt
-      return moment(value, 'YYYY-MM-DD').format(fmt)
-    },
-    formatCurrency(value) {
-      return '$' + value.toFixed(2);
-    },
-    onPaginationData(paginationData) {
-        this.hasPayments = paginationData.total > 0 ? true : false
-        this.$refs.pagination.setPaginationData(paginationData);
-        this.$refs.paginationInfo.setPaginationData(paginationData);
-    },
-    onChangePage(page) {
-      this.$refs.vuetable.changePage(page);
-    },
-    onLoading() {
-      console.log("loading... show your spinner here");
-    },
-    onLoaded() {
-      console.log("loaded! .. hide your spinner here");
-    }
-  }
 });

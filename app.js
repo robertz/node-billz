@@ -171,7 +171,6 @@ app.get('/api/user/:userid/payees', cors(), apiController.getPayees);
 app.get("/api/user/:userid/payee/:payeeid", cors(), apiController.getPayee);
 app.get('/api/user/:userid/payments', cors(), apiController.getPayments);
 app.get('/api/user/:userid/payments/:payeeid', cors(), apiController.getPayeePayments);
-app.get('/api/user/:userid/paymentvue', cors(), apiController.getPaymentsVue);
 
 /**
  * node-billz specific routes
