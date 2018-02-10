@@ -1,10 +1,13 @@
 const app = new Vue({
     el: "#app",
     data: {
+        hasPayments: false,
         payments: [],
         payees: [],
         pageSize: 10,
-        currentPage: 1
+        currentPage: 1,
+        prevEnable: false,
+        nextEnable: false
     },
     created: function() {
         fetch('/api/user/' + kdfe.userid + '/payees')
@@ -16,15 +19,24 @@ const app = new Vue({
             .then(res => res.json())
             .then(res => {
                 this.payments = res;
+                this.hasPayments = res.length ? true : false;
             });
     },
     methods: {
         nextPage: function () {
-            if (this.currentPage * this.pageSize < this.payments.length)
+            if (this.currentPage * this.pageSize < this.payments.length){
                 this.currentPage++;
+            }
+            else {
+            }
+                
         },
         prevPage: function () {
-            if (this.currentPage > 1) this.currentPage--;
+            if (this.currentPage > 1){
+                this.currentPage--;
+            } 
+            else {
+            }
         }
     },
     computed: {

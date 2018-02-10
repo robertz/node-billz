@@ -5,7 +5,11 @@ block content
     h5 Payment History
 
     div(id="app")
-        div(id="table-wrapper")
+        div(v-if="hasPayments === false")
+            h3 You do not have any payments
+            p Add some payees and lets get started!
+
+        div(id="table-wrapper" v-if="hasPayments === true")
             table.table.table-striped
                 thead
                     tr
@@ -23,10 +27,10 @@ block content
                 span(class="pull-left" style="margin-tip: 8px; font-weight: 700;")
                     | {{ pageInfo }}
                 span(class="pull-right")
-                    button.btn(@click="prevPage" style="width: 75px;") Previous
+                    button.btn(@click="prevPage" style="width: 75px;" v-bind:class="[prevEnable ? '' : 'btn-primary']") Previous
                     |
                     |
-                    button.btn(@click="nextPage" style="width: 75px;") Next
+                    button.btn(@click="nextPage" style="width: 75px;" v-bind:class="[nextEnable ? '' : 'btn-primary']") Next
 
     script.
         window.kdfe = !{JSON.stringify(data)};
