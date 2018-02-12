@@ -7,7 +7,8 @@ const app = new Vue({
         pageSize: 10,
         currentPage: 1,
         prevEnable: false,
-        nextEnable: false
+        nextEnable: true,
+        totalPages: 0
     },
     created: function() {
         fetch('/api/user/' + kdfe.userid + '/payees')
@@ -20,22 +21,32 @@ const app = new Vue({
             .then(res => {
                 this.payments = res;
                 this.hasPayments = res.length ? true : false;
+                this.totalPages = Math.ceil(res.length / this.pageSize);
             });
     },
     methods: {
         nextPage: function () {
-            if (this.currentPage * this.pageSize < this.payments.length){
+            if (this.currentPage < this.totalPages) {
                 this.currentPage++;
             }
-            else {
+            if (this.currentPage === this.totalPages) {
+                this.nextEnable = false;
             }
-                
+            else {
+                this.nextEnable = true;
+                this.prevEnable = this.currentPage > 1;
+            }
         },
         prevPage: function () {
             if (this.currentPage > 1){
                 this.currentPage--;
             } 
+            if (this.currentPage === 1) {
+                this.prevEnable = false;
+            }
             else {
+                this.prevEnable = true;
+                this.nextEnable = this.currentPage < this.totalPages;
             }
         }
     },
