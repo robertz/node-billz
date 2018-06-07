@@ -18,6 +18,4 @@ Also included is the sample env file for the hackathon-starter application that 
 
 To use the default settings, simple `cp .env.node-billz .env` to copy the sample settings to the `.env` file which is where the dotenv node plugin expects to find the environemnt variables.
 
-If setting up and running a personal server does not appeal to you, you can check out the demo server here: https://billz.kisdigital.com.
-
 Built from https://github.com/sahat/hackathon-starter
